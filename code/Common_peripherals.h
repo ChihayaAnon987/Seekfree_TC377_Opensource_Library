@@ -57,7 +57,7 @@ void CPU0_Init(void);                                          // CPU0 初始化
 void CPU1_Init(void);                                          // CPU1 初始化
 void Wireless_Init(uint8 Channel_Num);                         // 无线串口初始化
 void DRV8701_Init(void);                                       // 电机初始化
-void DRV8701_MOTOR_DRIVER(int Speed);                          // 电机驱动
+void DRV8701_MOTOR_DRIVER(int Motor_PWM);                   // 电机驱动
 void Encoder_Get(void);                                        // 编码器读取
 void SERVO_Init(void);                                         // 舵机初始化
 void SERVO_SET(int16 *angle);                                  // 舵机驱动1，用于调试

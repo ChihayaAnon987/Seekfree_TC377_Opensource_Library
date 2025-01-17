@@ -368,6 +368,8 @@ void RemoteCtrl_menu(void)
     ips200_show_uint(  104, 16 * 6, Control_Flag, 1);
     ips200_show_string(  0, 16 * 7, "Sta_Stp_Flag:");
     ips200_show_uint(  104, 16 * 7, RemoteCtrl_Start_Stop_Flag, 1);
+    ips200_show_string(  0, 16 * 8, "Motor_PWM:");
+    ips200_show_int (   80, 16 * 8 , RemoteCtrl_Speed, 4);
 }
 
 void Points_menu(void)

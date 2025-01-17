@@ -24,10 +24,10 @@ void RemoteCtrl_Direction_Speed()
     if(Control_Flag == 1 && RemoteCtrl_Start_Stop_Flag == 1)
     {
         RemoteCtrl_Direction = (int16)((uart_receiver.channel[0] - 856) * 39 / 800);    // 需要修改，把其值映射到SERVO_MOTOR_RMAX 到 SERVO_MOTOR_LMAX
-        Servo_Set2(SERVO_MOTOR_MID + RemoteCtrl_Direction);                             // 舵机角度
+        Servo_Set2(SERVO_MOTOR_MID - RemoteCtrl_Direction);                             // 舵机角度
 
-        RemoteCtrl_Speed = uart_receiver.channel[1] - 192;                              // 需要修改，把其值映射到-MAX_DUTY 到 MAX_DUTY
-        //DRV8701_MOTOR_DRIVER(RemoteCtrl_Speed);                                       // 电机速度
+        RemoteCtrl_Speed = (int)((uart_receiver.channel[1] - 1056) * 3000 / 800);                              // 需要修改，把其值映射到-MAX_DUTY 到 MAX_DUTY
+        DRV8701_MOTOR_DRIVER(RemoteCtrl_Speed);
     }
     if(Control_Flag == 1 && RemoteCtrl_Start_Stop_Flag == 0)
     {

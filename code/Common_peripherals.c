@@ -14,6 +14,7 @@ void CPU0_Init()
     IMU_Init();                                                     // IMU初始化
     gnss_init(TAU1201);                                             // GPS初始化
     SERVO_Init();                                                   // 舵机初始化
+    DRV8701_Init();                                                 // 电机初始化
     Wireless_Init(4);                                               // 无线串口初始化
     uart_receiver_init();                                           // sbus接收机初始化
     pit_ms_init(CCU60_CH0, 10);                                     // 中断，IMU数据采集，采样周期为0.01s
@@ -51,18 +52,18 @@ void DRV8701_Init(void)
 
 }
 
-void DRV8701_MOTOR_DRIVER(int Speed)
+void DRV8701_MOTOR_DRIVER(int Motor_PWM)
 {
-    Speed = IntClip(Speed, -PWM_DUTY_MAX, PWM_DUTY_MAX); // 限幅
-    if(Speed >= 0)                      // 电机正转
+    Motor_PWM = IntClip(Motor_PWM, -PWM_DUTY_MAX, PWM_DUTY_MAX); // 限幅
+    if(Motor_PWM >= 0)                      // 电机正转
     {
         gpio_set_level(DIR_CH1, 1);
-        pwm_set_duty  (PWM_CH1, (uint32)Speed);
+        pwm_set_duty  (PWM_CH1,  Motor_PWM);
     }
     else                                // 电机反转
     {
         gpio_set_level(DIR_CH1, 0);
-        pwm_set_duty  (PWM_CH1, (uint32)Speed);
+        pwm_set_duty  (PWM_CH1, -Motor_PWM);
     }
 }
 
