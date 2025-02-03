@@ -257,9 +257,9 @@ void PID_menu(void)
     ips200_show_string(0, 16 * 1, "I:");
     ips200_show_string(0, 16 * 2, "D:");
 
-    ips200_show_float(40, 16 * 0, 5.123, 2, 3);
-    ips200_show_float(40, 16 * 1, 0, 2, 3);
-    ips200_show_float(40, 16 * 2, 0, 2, 3);
+    ips200_show_float(16, 16 * 0, Parameter_set0.ServePID[0], 2, 3);
+    ips200_show_float(16, 16 * 1, Parameter_set0.ServePID[1], 2, 3);
+    ips200_show_float(16, 16 * 2, Parameter_set0.ServePID[2], 2, 3);
 
     ips200_show_string(0, 16 * 3, "Enter to fix");
 }
@@ -301,36 +301,42 @@ void GPS_menu(void)
 
 void spd_menu(void)
 {
-    ips200_show_string(0, 16 * 0, "-->spd     :");
-    ips200_show_string(0, 16 * 1, "   Distance:");
-    ips200_show_string(0, 16 * 2, "   mid     :");
-//    ips200_show_int(  80, 16 * 0, Parameter_set0.spd_duty, 5);
-//    ips200_show_float(80, 16 * 1 ,Parameter_set0.JU, 2, 2);
-//    ips200_show_int(  80, 16 * 2 ,Parameter_set0.serve_mid, 4);
+    ips200_show_string( 0, 16 * 0, "-->Speed   :");
+    ips200_show_string( 0, 16 * 1, "   Distance:");
+    ips200_show_string( 0, 16 * 2, "   ServeMid:");
+    ips200_show_string( 0, 16 * 3, "KEY1:Duty+1000");
+    ips200_show_string( 0, 16 * 4, "KEY2:Duty-1000");
+    ips200_show_string( 0, 16 * 5, "KEY3:Save");
+    ips200_show_int(  136, 16 * 0, Parameter_set0.Speed_Duty, 5);
+    ips200_show_float(136, 16 * 1, Parameter_set0.Distance, 2, 2);
+    ips200_show_int(  136, 16 * 2, Parameter_set0.Serve_Mid, 4);
 
 }
 
 void Distance_menu(void)
 {
 
-    ips200_show_string(0, 16 * 0, "   spd     :");
-    ips200_show_string(0, 16 * 1, "-->Distance:");
-    ips200_show_string(0, 16 * 2, "   mid     :");
-//    ips200_show_int(  80, 16 * 0, Parameter_set0.spd_duty, 5);
-//    ips200_show_float(80, 16 * 1 ,Parameter_set0.JU, 2, 2);
-//    ips200_show_int(  80, 16 * 2 ,Parameter_set0.serve_mid, 4);
+    ips200_show_string( 0, 16 * 0, "   Speed   :");
+    ips200_show_string( 0, 16 * 1, "-->Distance:");
+    ips200_show_string( 0, 16 * 2, "   ServeMid:");
+    ips200_show_string( 0, 16 * 3, "KEY1:Distance+0.5");
+    ips200_show_string( 0, 16 * 4, "KEY2:Distance-0.5");
+    ips200_show_string( 0, 16 * 5, "KEY3:Save");
+    ips200_show_int(  136, 16 * 0, Parameter_set0.Speed_Duty, 5);
+    ips200_show_float(136, 16 * 1, Parameter_set0.Distance, 2, 2);
+    ips200_show_int(  136, 16 * 2, Parameter_set0.Serve_Mid, 4);
 
 
 }
 
 void serve_mid_menu(void)
 {
-    ips200_show_string(0, 16 * 0, "   spd     :");
+    ips200_show_string(0, 16 * 0, "   Speed   :");
     ips200_show_string(0, 16 * 1, "   Distance:");
-    ips200_show_string(0, 16 * 2, "-->mid     :");
-//    ips200_show_int(  80, 16 * 0, Parameter_set0.spd_duty, 5);
-//    ips200_show_float(80, 16 * 1 ,Parameter_set0.JU, 2, 2);
-//    ips200_show_int(  80, 16 * 2 ,Parameter_set0.serve_mid, 4);
+    ips200_show_string(0, 16 * 2, "-->ServeMid:");
+    ips200_show_int(  136, 16 * 0, Parameter_set0.Speed_Duty, 5);
+    ips200_show_float(136, 16 * 1, Parameter_set0.Distance, 2, 2);
+    ips200_show_int(  136, 16 * 2, Parameter_set0.Serve_Mid, 4);
 
 }
 
@@ -389,6 +395,11 @@ void Points_menu(void)
     ips200_show_string(0, 16 * 5, "Distance:");
     ips200_show_float(96, 16 * 4, Direction, 3, 3);
     ips200_show_float(96, 16 * 5, Distance , 3, 6);
+
+    ips200_show_string(0, 16 * 6, "KEY1:Point+1/Lat+");
+    ips200_show_string(0, 16 * 7, "KEY2:Point-1/Lat-");
+    ips200_show_string(0, 16 * 8, "KEY3:Save   /Lot+");
+    ips200_show_string(0, 16 * 9, "KEY4:       /Lot-");
 }
 
 void Imu963_menu()
@@ -432,11 +443,13 @@ void P_menu(void)
     ips200_show_string(  0, 16 * 0, "-->P:");
     ips200_show_string(  0, 16 * 1, "   I:");
     ips200_show_string(  0, 16 * 2, "   D:");
-    ips200_show_string(  0, 16 * 3, "KEY1:P+");
-    ips200_show_string(120, 16 * 3, "KEY2:P-");
-//    ips200_show_float  (40, 16 * 0,Parameter_set0.serPID[0], 2, 3);
-//    ips200_show_float  (40, 16 * 1,Parameter_set0.serPID[1], 2, 3);
-//    ips200_show_float  (40, 16 * 2,Parameter_set0.serPID[2], 2, 3);
+    ips200_show_string(  0, 16 * 3, "KEY1:P+0.1");
+    ips200_show_string(120, 16 * 3, "KEY2:P-0.1");
+    ips200_show_string(  0, 16 & 4, "KEY3:Save");
+    ips200_show_string(120, 16 * 4, "KEY4:Get PID");
+    ips200_show_float  (80, 16 * 0,Parameter_set0.ServePID[0], 2, 3);
+    ips200_show_float  (80, 16 * 1,Parameter_set0.ServePID[1], 2, 3);
+    ips200_show_float  (80, 16 * 2,Parameter_set0.ServePID[2], 2, 3);
 }
 
 void I_menu(void)
@@ -444,22 +457,26 @@ void I_menu(void)
     ips200_show_string(0, 16 * 0, "   P:");
     ips200_show_string(0, 16 * 1, "-->I:");
     ips200_show_string(0, 16 * 2, "   D:");
-    ips200_show_string(  0, 16 * 3, "KEY1:I+");
-    ips200_show_string(120, 16 * 3, "KEY2:I-");
-    //    ips200_show_float  (40, 16 * 0,Parameter_set0.serPID[0], 2, 3);
-    //    ips200_show_float  (40, 16 * 1,Parameter_set0.serPID[1], 2, 3);
-    //    ips200_show_float  (40, 16 * 2,Parameter_set0.serPID[2], 2, 3);
+    ips200_show_string(  0, 16 * 3, "KEY1:I+0.1");
+    ips200_show_string(120, 16 * 3, "KEY2:I-0.1");
+    ips200_show_string(  0, 16 & 4, "KEY3:Save");
+    ips200_show_string(120, 16 * 4, "KEY4:Get PID");
+    ips200_show_float  (80, 16 * 0,Parameter_set0.ServePID[0], 2, 3);
+    ips200_show_float  (80, 16 * 1,Parameter_set0.ServePID[1], 2, 3);
+    ips200_show_float  (80, 16 * 2,Parameter_set0.ServePID[2], 2, 3);
 }
 void D_menu(void)
 {
     ips200_show_string(0, 16 * 0, "   P:");
     ips200_show_string(0, 16 * 1, "   I:");
     ips200_show_string(0, 16 * 2, "-->D:");
-    ips200_show_string(  0, 16 * 3, "KEY1:D+");
-    ips200_show_string(120, 16 * 3, "KEY2:D-");
-    //    ips200_show_float  (40, 16 * 0,Parameter_set0.serPID[0], 2, 3);
-    //    ips200_show_float  (40, 16 * 1,Parameter_set0.serPID[1], 2, 3);
-    //    ips200_show_float  (40, 16 * 2,Parameter_set0.serPID[2], 2, 3);
+    ips200_show_string(  0, 16 * 3, "KEY1:D+0.1");
+    ips200_show_string(120, 16 * 3, "KEY2:D-0.1");
+    ips200_show_string(  0, 16 & 4, "KEY3:Save");
+    ips200_show_string(120, 16 * 4, "KEY4:Get PID");
+    ips200_show_float  (80, 16 * 0,Parameter_set0.ServePID[0], 2, 3);
+    ips200_show_float  (80, 16 * 1,Parameter_set0.ServePID[1], 2, 3);
+    ips200_show_float  (80, 16 * 2,Parameter_set0.ServePID[2], 2, 3);
 }
 
 void ZongZuanF(void)
@@ -502,6 +519,56 @@ void Key_Ctrl_Menu()
             GL_CRC();
 
         }
+        // P调节
+        if(func_index == 4)
+        {
+            if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
+            {
+                Parameter_set0.ServePID[0] += 0.1;
+            }
+            if(key_get_state(KEY_2) == KEY_SHORT_PRESS)
+            {
+                Parameter_set0.ServePID[0] -= 0.1;
+            }
+            if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
+            {
+                FLASH_SAV_PAR();
+            }
+        }
+
+        // I调节
+        if(func_index == 5)
+        {
+            if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
+            {
+                Parameter_set0.ServePID[1] += 0.1;
+            }
+            if(key_get_state(KEY_2) == KEY_SHORT_PRESS)
+            {
+                Parameter_set0.ServePID[1] -= 0.1;
+            }
+            if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
+            {
+                FLASH_SAV_PAR();
+            }
+        }
+
+        // D调节
+        if(func_index == 6)
+        {
+            if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
+            {
+                Parameter_set0.ServePID[2] += 0.1;
+            }
+            if(key_get_state(KEY_2) == KEY_SHORT_PRESS)
+            {
+                Parameter_set0.ServePID[2] -= 0.1;
+            }
+            if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
+            {
+                FLASH_SAV_PAR();
+            }
+        }
 
         if(func_index == 8)
         {
@@ -521,20 +588,82 @@ void Key_Ctrl_Menu()
             }
         }
 
-        if(func_index == 16)                                       //点位查看调节
+        // 调试速度
+        if(func_index == 10)
         {
             if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
             {
-                if(Point < Point_NUM - 1)
-                {
-                    Point = Point + 1;
-                }
+                Parameter_set0.Speed_Duty += 1000;
             }
             if(key_get_state(KEY_2) == KEY_SHORT_PRESS)
             {
-                if(Point > 0)
+                Parameter_set0.Speed_Duty -= 1000;
+            }
+            if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
+            {
+                FLASH_SAV_PAR();
+            }
+        }
+
+        // 换点距离
+        if(func_index == 11)
+        {
+            if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
+            {
+                Parameter_set0.Distance += 0.5;
+            }
+            if(key_get_state(KEY_2) == KEY_SHORT_PRESS)
+            {
+                Parameter_set0.Distance -= 0.5;
+            }
+            if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
+            {
+                FLASH_SAV_PAR();
+            }
+        }
+
+        if(func_index == 16)                                       //点位查看调节
+        {
+            // 拨码开关在上表示点位切换
+            if(!gpio_get_level(SWITCH1))
+            {
+                if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
                 {
-                    Point = Point - 1;
+                    if(Point < Point_NUM - 1)
+                    {
+                        Point = Point + 1;
+                    }
+                }
+                if(key_get_state(KEY_2) == KEY_SHORT_PRESS)
+                {
+                    if(Point > 0)
+                    {
+                        Point = Point - 1;
+                    }
+                }
+                if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
+                {
+                    FLASH_FIX_GPS();
+                }
+            }
+            // 拨码开关在下表示点位设置
+            if(gpio_get_level(SWITCH1))
+            {
+                if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
+                {
+                    GPS_GET_LAT[Point] += 0.000001;
+                }
+                if(key_get_state(KEY_2) == KEY_SHORT_PRESS)
+                {
+                    GPS_GET_LAT[Point] -= 0.000001;
+                }
+                if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
+                {
+                    GPS_GET_LOT[Point] += 0.000001;
+                }
+                if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
+                {
+                    GPS_GET_LOT[Point] -= 0.000001;
                 }
             }
 
@@ -572,22 +701,22 @@ void Key_Ctrl_Menu()
             if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
             {
                 Servo_Angle += 10;
-                Servo_Set2(Servo_Angle);     // 舵机角度控制
+                Servo_Set(Servo_Angle);     // 舵机角度控制
             }
             if(key_get_state(KEY_2) == KEY_SHORT_PRESS)
             {
                 Servo_Angle -= 10;
-                Servo_Set2(Servo_Angle);     // 舵机角度控制
+                Servo_Set(Servo_Angle);     // 舵机角度控制
             }
             if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
             {
                 Servo_Angle += 1;
-                Servo_Set2(Servo_Angle);     // 舵机角度控制
+                Servo_Set(Servo_Angle);     // 舵机角度控制
             }
             if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
             {
                 Servo_Angle -= 1;
-                Servo_Set2(Servo_Angle);     // 舵机角度控制
+                Servo_Set(Servo_Angle);     // 舵机角度控制
             }
         }
     }

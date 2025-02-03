@@ -39,6 +39,21 @@ void Track_Follow()
     {
         Angle_Error = Angle - Z_360;// GPS的方向角-IMU经过PD处理的航向角
     }
+    // 改进点
+    // 1.Angle是GPS的方向角，通过对GPS的滤波，可以得到更加准确的方向角
+    // 2.Z_360是IMU的航向角，通过对IMU的滤波，可以得到更加准确的航向角（卡尔曼滤波和四元数，上面这两点是数据处理）
+    // 3.加入舵机PD控制
+    // 4.加入电机PID控制
+    // 5.MPC控制和曲率前馈
+    Servo_Set((int16)(SERVO_MOTOR_MID - Angle_Error));
+    
+    if(Track_Points_NUM == 1 || Track_Points_NUM == 2)
+    {
+        DRV8701_MOTOR_DRIVER(3000);
+    }
+
+
+
 }
 
 // 切换点位

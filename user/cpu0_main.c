@@ -54,7 +54,8 @@ int core0_main(void)
     debug_init();                   // 初始化默认调试串口
     // 此处编写用 户代码 例如外设初始化代码等
     CPU0_Init();                     // 所有初始化
-
+    FLASH_GET_PAR();                 // 从 Flash 读取参数
+    FLASH_GET_GPS();                 // 从 Flash 读取 GPS 数据
     // 此处编写用户代码 例如外设初始化代码等
     cpu_wait_event_ready();         // 等待所有核心初始化完毕
     while (TRUE)

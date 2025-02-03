@@ -21,8 +21,10 @@ extern double FilterPoint_Lat;                                 // 滤波后的纬度
 extern double FilterPoint_Lon;                                 // 滤波的经度
 // extern double Now_Lat;                                         // 自身相对原点的纬度
 // extern double Now_Lon;                                         // 自身相对原点的经度
-// extern double Origin_Lat;                                      // 新建坐标系的原点对应的纬度
-// extern double Origin_Lon;                                      // 新建坐标系的原点对应的经度
+extern double Start_Lat;                                       // 发车的经度
+extern double Start_Lon;                                       // 发车的纬度
+extern double Delta_Lat;                                       // 漂移经度
+extern double Delta_Lon;                                       // 漂移纬度
 extern double Angle;                                           // 方位角
 extern double Distance;                                        // 自身距下一个点的距离
 extern float  Yaw;                                             // 偏航角

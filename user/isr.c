@@ -64,13 +64,13 @@ IFX_INTERRUPT(cc60_pit_ch1_isr, CCU6_0_CH1_INT_VECTAB_NUM, CCU6_0_CH1_ISR_PRIORI
     if(Control_Flag == 0)
     {
         // Servo_Angle = (int16)(SERVO_MOTOR_MID + PidLocCtrl(&PID_IMU, Angle_Error));
-        // Servo_Set2(Servo_Angle);
+        // Servo_Set(Servo_Angle);
         // DRV8701_MOTOR_DRIVER((int)PidIncCtrl(&PID_MOTOR, Speed - Encoder));
-        PdGpsCtrl();
+        // PdGpsCtrl();
     }
 
     Get_Gps();
-    Get_Gps_Yaw();
+    // Get_Gps_Yaw();
     Point_Switch();
     Encoder_Get();                                  // 获取编码器数据
 

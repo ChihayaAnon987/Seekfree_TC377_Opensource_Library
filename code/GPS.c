@@ -13,6 +13,25 @@
 //4.方向角-航向角=角度误差
 //存坐标点-----1.用FLASH（可以断电）      2.数组
 
+//由于GPS会有漂移，所以一种方案是在踩点用发车位置的零点减去踩点的零点，从而得到漂移值
+//后续点位均减去漂移值，就可以得到目标行驶路线
+//但是由于踩点过程中也存在漂移，可以加快踩点速度
+
+/*在比赛的时候，一般我们的发车位置是固定的，如果我们先记录发车的坐标，
+再依次采集需要的路径坐标，后面轮到发车时，通过GPS当前的坐标数据与之
+前采集的发车坐标做差，那么我们是否就得到了这段时间的GPS静态漂移值了呢？
+如果我们将再后面所有采集的GPS坐标都加上这个偏差值，那么岂不是就完全避免
+了这段时间的GPS漂移呢？非常正确，这就是更进一步的GPS矫正导航算法，这样我
+们就已经可以利用GPS实现比较准确的路径导航了。?
+
+如果踩点的时候，GPS数据就已经在偏移(踩点过程越慢，偏移的距离越远)，
+那么还有办法解决么？当然有的，既然已经将采集的GPS点位显示到屏幕上了，
+那么我们直接根据路径图修改部分已经偏移的点位，再结合GPS矫正导航，
+即可实现非常精准的导航效果。
+
+如果小车跑的时候的实时数据也飘了的话，可以结合惯导的方法
+*/
+
 
 uint32 Point_NUM = 0;               // 已采集点数
 float K_Gps      = 0.5;             // 衔接部分的权重
@@ -20,8 +39,10 @@ double FilterPoint_Lat = 0;         // 滤波后的纬度
 double FilterPoint_Lon = 0;         // 滤波后的经度
 // double Now_Lat      = 0;            // 自身相对原点的经度
 // double Now_Lon      = 0;            // 自身相对原点的纬度
-// double Origin_Lat   = 0;            // 新建坐标系的原点对应的经度
-// double Origin_Lon   = 0;            // 新建坐标系的原点对应的纬度
+double Start_Lat   = 0;             // 发车的经度
+double Start_Lon   = 0;             // 发车的纬度
+double Delta_Lat;                   // 漂移经度
+double Delta_Lon;                   // 漂移纬度   
 double Angle        = 0;            // 方位角
 float  Gps_Yaw      = 0;            // GPS直接得到的偏航角
 uint8  Gps_Yaw_Flag = 0;            // GPS直接得到的偏航角标志位
@@ -89,15 +110,15 @@ void Get_Gps()
         FilterPoint_Lat = K_Gps * FilterPoint_Lat + (1 - K_Gps) * gnss.latitude;
         FilterPoint_Lon = K_Gps * FilterPoint_Lon + (1 - K_Gps) * gnss.longitude;
 
-        // Now_Lat = gnss.latitude - Origin_Lat;
-        // Now_Lon = gnss.longitude - Origin_Lon;
+        // Now_Lat = gnss.latitude;
+        // Now_Lon = gnss.longitude;
 
-        Angle = get_two_points_azimuth(gnss.latitude, gnss.longitude, GPS_GET_LAT[Track_Points_NUM], GPS_GET_LOT[Track_Points_NUM]);
+        Angle = get_two_points_azimuth(gnss.latitude, gnss.longitude, GPS_GET_LAT[Track_Points_NUM] - Delta_Lat, GPS_GET_LOT[Track_Points_NUM] - Delta_Lon);
         if(Angle > 180)
         {
             Angle -= 360;
         }
-        Distance = get_two_points_distance(gnss.latitude, gnss.longitude, GPS_GET_LAT[Track_Points_NUM], GPS_GET_LOT[Track_Points_NUM]);
+        Distance = get_two_points_distance(gnss.latitude, gnss.longitude, GPS_GET_LAT[Track_Points_NUM] - Delta_Lat, GPS_GET_LOT[Track_Points_NUM] - Delta_Lon);
 
         if(gnss.direction < 180)
         {

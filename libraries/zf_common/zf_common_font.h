@@ -63,7 +63,7 @@ extern const uint8      ascii_font_6x8[][6];
 extern const uint8      chinese_test[8][16];
 extern const uint8      oled_16x16_chinese[][16];
 extern const uint8      gImage_seekfree_logo[38400];
-extern const uint8      my_picture[64800];
+extern const uint8      my_picture[34020];
 
 
 #endif

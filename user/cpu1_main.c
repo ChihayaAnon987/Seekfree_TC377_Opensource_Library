@@ -58,7 +58,7 @@ void core1_main(void)
         Menu_Control();
         key_scanner();
         Key_Ctrl_Menu();
-        ips200_show_rgb565_image(0, 185, (const uint16 *)my_picture, 240, 135, 240, 135, 1);
+        ips200_show_rgb565_image(114, 185, (const uint16 *)my_picture, 126, 135, 126, 135, 1);
         RemoteCtrl_Program();
 
         // 此处编写需要循环执行的代码

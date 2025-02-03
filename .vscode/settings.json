@@ -1,5 +1,12 @@
 {
     "files.associations": {
-        "zf_common_headfile.h": "c"
+        "zf_common_headfile.h": "c",
+        "stdint.h": "c",
+        "math.h": "c",
+        "cstdint": "c",
+        "ifxscueru.h": "c"
+    },
+    "files.watcherExclude": {
+        "**/target": true
     }
 }

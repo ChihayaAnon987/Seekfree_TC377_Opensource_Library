@@ -86,8 +86,8 @@ void SERVO_Init(void)
     pwm_init(SERVO_MOTOR_PWM, SERVO_MOTOR_FREQ, (uint32)SERVO_MOTOR_DUTY(SERVO_MOTOR_MID));// 引脚，舵机频率，占空比
 }
 
-// 舵机驱动1
-void SERVO_SET(int16 *angle)
+// 舵机驱动测试
+void Servo_SetTest(int16 *angle)
 {
     // 舵机限幅
     if(*angle > SERVO_MOTOR_LMAX) {*angle = SERVO_MOTOR_LMAX;}
@@ -96,8 +96,8 @@ void SERVO_SET(int16 *angle)
     pwm_set_duty(SERVO_MOTOR_PWM, (uint32)SERVO_MOTOR_DUTY(*angle));
 }
 
-// 舵机驱动2
-void Servo_Set2(int16 angle)
+// 舵机驱动
+void Servo_Set(int16 angle)
 {
     // 舵机限幅
     if(angle > SERVO_MOTOR_LMAX) {angle = SERVO_MOTOR_LMAX;}
