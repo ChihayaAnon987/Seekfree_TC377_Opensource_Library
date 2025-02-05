@@ -8,9 +8,9 @@
 
 int16 Servo_Angle = SERVO_MOTOR_MID;
 int16 Encoder;
-
 void CPU0_Init()
 {
+    AHRS_init();                                                    // AHRS初始化
     IMU_Init();                                                     // IMU初始化
     gnss_init(TAU1201);                                             // GPS初始化
     SERVO_Init();                                                   // 舵机初始化
@@ -40,7 +40,6 @@ void Wireless_Init(uint8 Channel_Num)
 {
     wireless_uart_init();                                           // 无线串口初始化
     seekfree_assistant_interface_init(SEEKFREE_ASSISTANT_WIRELESS_UART); // 逐飞助手初始化
-    seekfree_assistant_oscilloscope_struct oscilloscope_data;       // 初始化逐飞助手示波器的结构体
     oscilloscope_data.channel_num = Channel_Num;                    // 示波器通道数
 }
 
@@ -53,12 +52,12 @@ void DRV8701_Init(void)
 }
 
 void DRV8701_MOTOR_DRIVER(int Motor_PWM)
-{
+{   
     Motor_PWM = IntClip(Motor_PWM, -PWM_DUTY_MAX, PWM_DUTY_MAX); // 限幅
     if(Motor_PWM >= 0)                      // 电机正转
     {
         gpio_set_level(DIR_CH1, 1);
-        pwm_set_duty  (PWM_CH1,  Motor_PWM);
+        pwm_set_duty  (PWM_CH1, Motor_PWM);
     }
     else                                // 电机反转
     {

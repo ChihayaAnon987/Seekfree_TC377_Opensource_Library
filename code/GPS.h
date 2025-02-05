@@ -23,9 +23,12 @@ extern double FilterPoint_Lon;                                 // 滤波的经度
 // extern double Now_Lon;                                         // 自身相对原点的经度
 extern double Start_Lat;                                       // 发车的经度
 extern double Start_Lon;                                       // 发车的纬度
+extern double Straight_Lat;                                    // 直行10-20m的经度
+extern double Straight_Lon;                                    // 直行10-20m的纬度
 extern double Delta_Lat;                                       // 漂移经度
 extern double Delta_Lon;                                       // 漂移纬度
 extern double Angle;                                           // 方位角
+extern double Delta_Angle;                                     // GPS与陀螺仪的正方向偏差角
 extern double Distance;                                        // 自身距下一个点的距离
 extern float  Yaw;                                             // 偏航角
 extern float  Gps_Yaw;                                         // GPS直接得到的偏航角

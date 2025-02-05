@@ -19,6 +19,7 @@ Parameter_set Parameter_set0=
 int func_index = 0;
 int key_value;
 int Point = 0;   // 菜单点位
+seekfree_assistant_oscilloscope_struct oscilloscope_data;
 
 menu_table table[25]=
 {
@@ -404,15 +405,23 @@ void Points_menu(void)
 
 void Imu963_menu()
 {
-    ips200_show_string(0, 16 * 0, "Angle:");
+    ips200_show_string( 0, 16 * 0, "IMU_Angle:");
+    ips200_show_string( 0, 16 * 1, "IMU_Data.gyro_z:");
+    ips200_show_string( 0, 16 * 2, "MAX_IMU_Data_gyro_z:");
     if(Z_360 >180)
     {
         Z_360 -= 360;
     }
-    ips200_show_float( 0, 16 * 1, Z_360, 3, 3);               // 显示浮点数   整数显示3位   小数显示3位
-    ips200_show_string(0, 16 * 2, "IMU_Data.gyro_z:");
-    ips200_show_float( 0, 16 * 3, IMU_Data.gyro_z, 3, 3);
-    system_delay_ms(100);
+    ips200_show_float( 80, 16 * 0, Z_360, 3, 3);
+    ips200_show_float(128, 16 * 1, IMU_Data.gyro_z, 3, 3);
+    ips200_show_float(160, 16 * 2, MAX_IMU_Data_gyro_z, 3, 3);
+
+    oscilloscope_data.data[0] = IMU_Data.gyro_z;
+    oscilloscope_data.data[1] = MAX_IMU_Data_gyro_z;
+    oscilloscope_data.data[2] = 0;
+    oscilloscope_data.data[3] = 0;
+    seekfree_assistant_oscilloscope_send(&oscilloscope_data);
+    system_delay_ms(5);
 }
 
 void Flash_menu()
@@ -667,6 +676,14 @@ void Key_Ctrl_Menu()
                 }
             }
 
+        }
+
+        if(func_index == 20)
+        {
+            if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
+            {
+                MAX_IMU_Data_gyro_z = 0;
+            }
         }
 
         if(func_index == 22)

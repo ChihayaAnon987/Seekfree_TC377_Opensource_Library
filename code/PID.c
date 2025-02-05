@@ -7,10 +7,15 @@
 
 #include "zf_common_headfile.h"
 
+/*
+    舵机和电机的PID算法参考：[链接](https://mp.weixin.qq.com/s/vwganbbwu0eX2j-ZmxWk_A)
+*/
+
 PIDController PID_Init;   // 用于 PID 初始化
 PIDController PID_GPS;    // 用于 GPS 控制
 PIDController PID_IMU;    // 用于 IMU 控制
-PIDController PID_MOTOR;  // 用于电机控制
+PIDController PID_SERVO;  // 舵机 PID控制器
+PIDController PID_MOTOR;  // 电机 PID控制器
 
 
 /****************************************************************************************************
@@ -110,6 +115,58 @@ void PdGpsCtrl()
     //DRV8701_MOTOR_DRIVER(3000);
 }
 
+/****************************************************************************************************
+//  @brief      舵机 PD位置式控制器
+//  @param      void
+//  @return     void
+//  @since
+//  Sample usage:PiLocServoCtrl();
+****************************************************************************************************/
+void PDLocServoCtrl()
+{
+    PID_SERVO.last_error    = PID_SERVO.current_error;
+    PID_SERVO.current_error = Angle_Error;
+    PID_SERVO.derivative    = PID_SERVO.current_error - PID_SERVO.last_error;
+    PID_SERVO.output = Parameter_set0.ServePID[0] * PID_SERVO.current_error + 
+                       Parameter_set0.ServePID[2] * PID_SERVO.derivative;
+
+    Servo_Angle = Parameter_set0.Serve_Mid - PID_SERVO.output;
+    if(Servo_Angle > SERVO_MOTOR_LMAX) {Servo_Angle = SERVO_MOTOR_LMAX;}
+    if(Servo_Angle < SERVO_MOTOR_RMAX) {Servo_Angle = SERVO_MOTOR_RMAX;}
+    pwm_set_duty(SERVO_MOTOR_PWM, (uint32)SERVO_MOTOR_DUTY(Servo_Angle));
+}
+
+/****************************************************************************************************
+//  @brief      电机 PID增量式控制器
+//  @param      TARGET_MOTOR_DUTY      目标电机占空比
+//  @return     void
+//  @since
+//  Sample usage:PIDIncMotorCtrl(3000);
+****************************************************************************************************/
+void PIDIncMotorCtrl(int16 TARGET_MOTOR_DUTY)
+{
+    PID_MOTOR.lastlast_error = PID_MOTOR.last_error;
+    PID_MOTOR.last_error     = PID_MOTOR.current_error;
+    PID_MOTOR.current_error  = TARGET_MOTOR_DUTY - Encoder;
+
+    PID_MOTOR.output += Parameter_set0.SpeedPID[0] * (PID_MOTOR.current_error - PID_MOTOR.last_error) +
+                        Parameter_set0.SpeedPID[1] * PID_MOTOR.current_error +
+                        Parameter_set0.SpeedPID[2] * (PID_MOTOR.current_error - 2 * PID_MOTOR.last_error + PID_MOTOR.lastlast_error);
+    FloatClip(PID_MOTOR.output, -PWM_DUTY_MAX, PWM_DUTY_MAX);
+    int32 MOTOR_DUTY = (int32)PID_MOTOR.output;
+    if(MOTOR_DUTY >= 0)
+    {
+        gpio_set_level(DIR_CH1, 1);
+        pwm_set_duty  (PWM_CH1, MOTOR_DUTY);
+    }
+    else
+    {
+        gpio_set_level(DIR_CH1, 0);
+        pwm_set_duty  (PWM_CH1, -MOTOR_DUTY);
+    }
+}
+
+
 // /****************************************************************************************************
 // //  @brief      位置式PID控制
 // //  @param      *pid                   PID结构体
@@ -155,13 +212,6 @@ void PdGpsCtrl()
 //  }
 
 
-/****************************************************************************************************
-//  @brief      将积分的YAW和逐飞GPS的direction进行互补融合
-//  @param      void
-//  @return     void
-//  @since
-//  Sample usage:
-****************************************************************************************************/
 void GPS_IMU_COM_filtering()
 {
     float K = 0.9;          // 互补系数

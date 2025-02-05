@@ -4,7 +4,8 @@
         "stdint.h": "c",
         "math.h": "c",
         "cstdint": "c",
-        "ifxscueru.h": "c"
+        "ifxscueru.h": "c",
+        "zf_device_imu963ra.h": "c"
     },
     "files.watcherExclude": {
         "**/target": true

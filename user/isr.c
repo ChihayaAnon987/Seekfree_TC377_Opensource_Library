@@ -45,12 +45,13 @@ IFX_INTERRUPT(cc60_pit_ch0_isr, CCU6_0_CH0_INT_VECTAB_NUM, CCU6_0_CH0_ISR_PRIORI
     interrupt_global_enable(0);                     // 开启中断嵌套
     pit_clear_flag(CCU60_CH0);
 
+    // 0.01s中断，100Hz
     imu963ra_get_gyro();// 获取IMU963RA陀螺仪数据
     if(gyro_Offset_flag == 1)
     {
         IMU_YAW_integral();  //积分出角度值
     }
-
+    AHRS_getYawPitchRoll(angle);
 
 
 }
@@ -61,15 +62,13 @@ IFX_INTERRUPT(cc60_pit_ch1_isr, CCU6_0_CH1_INT_VECTAB_NUM, CCU6_0_CH1_ISR_PRIORI
     interrupt_global_enable(0);                     // 开启中断嵌套
     pit_clear_flag(CCU60_CH1);
 
+    // 0.005s中断，200Hz
+
     if(Control_Flag == 0)
     {
-        // Servo_Angle = (int16)(SERVO_MOTOR_MID + PidLocCtrl(&PID_IMU, Angle_Error));
-        // Servo_Set(Servo_Angle);
-        // DRV8701_MOTOR_DRIVER((int)PidIncCtrl(&PID_MOTOR, Speed - Encoder));
-        // PdGpsCtrl();
+        PDLocServoCtrl();                           // 舵机 PD位置式控制
     }
 
-    Get_Gps();
     // Get_Gps_Yaw();
     Point_Switch();
     Encoder_Get();                                  // 获取编码器数据
@@ -82,8 +81,8 @@ IFX_INTERRUPT(cc61_pit_ch0_isr, CCU6_1_CH0_INT_VECTAB_NUM, CCU6_1_CH0_ISR_PRIORI
     interrupt_global_enable(0);                     // 开启中断嵌套
     pit_clear_flag(CCU61_CH0);
 
-
-
+    // 0.1s中断，10Hz
+    Get_Gps();
 
 }
 

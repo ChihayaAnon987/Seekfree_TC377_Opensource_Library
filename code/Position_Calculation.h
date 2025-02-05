@@ -15,13 +15,17 @@
 
 
 //===================================================全局变量BEG===================================================
-extern int Track_Points_NUM;                                   // 当前追踪第几个点
+extern int    Track_Points_NUM;                                // 当前追踪第几个点
 extern double Angle_Error;                                     // 角度误差
+extern float  Fusion_angle;                                    // GPS和IMU互补滤波后的角度
+extern float  Fusion_alpha;                                    // GPS和IMU互补滤波的权重
 extern int16  Speed;                                           // 速度
 //===================================================全局变量END===================================================
 
 
 //===================================================函数声明BEG===================================================
+void Stright_Some_Distance(void);                              // 直行一段距离
+void GPS_IMU_Complementary_Filtering(void);                    // GPS与IMU互补滤波
 void Track_Follow(void);                                       // 核心循迹程序
 void Point_Switch(void);                                       // 点位切换
 //===================================================函数声明END===================================================

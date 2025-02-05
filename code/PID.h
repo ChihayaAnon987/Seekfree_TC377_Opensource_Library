@@ -29,8 +29,10 @@ typedef struct
     float integrator;                                          // »ı·ÖÖµ
     float current_error;                                       // Îó²î
     float last_error;                                          // ÉÏ´ÎÎó²î
+    float lastlast_error;                                      // ÉÏÉÏ´ÎÎó²î
+    float derivative;                                          // Îó²îÎ¢·Ö
     float last_derivative;                                     // ÉÏ´ÎÎó²îÓëÉÏÉÏ´ÎÎó²îÖ®²î
-    unsigned long last_t;                                      // ÉÏ´ÎÊ±¼ä
+    // unsigned long last_t;                                      // ÉÏ´ÎÊ±¼ä
 } PIDController;
 
 // typedef struct
@@ -64,6 +66,7 @@ typedef struct                                                  // »¬¶¯Æ½¾ùÂË²¨½
 extern PIDController PID_Init;         // PID³õÊ¼»¯¿ØÖÆÆ÷
 extern PIDController PID_GPS;          // GPS PID¿ØÖÆÆ÷
 extern PIDController PID_IMU;          // IMU PID¿ØÖÆÆ÷
+extern PIDController PID_SERVO;        // ¶æ»ú PID¿ØÖÆÆ÷
 extern PIDController PID_MOTOR;        // µç»ú PID¿ØÖÆÆ÷
 //===================================================È«¾Ö±äÁ¿END===================================================
 
@@ -74,9 +77,10 @@ float FloatClip(float x, float low, float up);                          // ÏŞ·ùº
 float PidLocCtrl(PIDController *pid, float error);                      // PIDÎ»ÖÃÊ½¿ØÖÆÆ÷Êä³ö
 float PidIncCtrl(PIDController *pid, float error);                      // PIDÔöÁ¿Ê½¿ØÖÆÆ÷Êä³ö
 void  PdGpsCtrl(void);                                                  // GPS PD¿ØÖÆÆ÷
+void  PDLocServoCtrl(void);                                             // ¶æ»ú PDÎ»ÖÃÊ½¿ØÖÆÆ÷
+void  PIDIncMotorCtrl(int16 TARGET_MOTOR_DUTY);                         // µç»ú PIDÔöÁ¿Ê½¿ØÖÆÆ÷
 // void PidLocCtrl(PIDController *pid, float measuredVal);                 // PIDÎ»ÖÃÊ½¿ØÖÆÆ÷Êä³ö
 // void PidIncCtrl(PIDController *pid, float measuredVal);                 // PIDÔöÁ¿Ê½¿ØÖÆÆ÷Êä³ö
-void GPS_IMU_COM_filtering(void);                                       // GPSÓëIMU»¥²¹ÂË²¨
 void move_filter_init(move_filter_struct *move_filter);                 // »¬¶¯Æ½¾ùÂË²¨³õÊ¼»¯
 void move_filter_calc(move_filter_struct *move_filter, int32_t new_data); // »¬¶¯Æ½¾ùÂË²¨¼ÆËã
 //===================================================º¯ÊıÉùÃ÷END===================================================
