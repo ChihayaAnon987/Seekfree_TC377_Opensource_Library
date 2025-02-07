@@ -16,59 +16,66 @@ Parameter_set Parameter_set0=
     SERVO_MOTOR_MID             // 舵机机械可调中值
 };
 
-int func_index = 0;
-int key_value;
-int Point = 0;   // 菜单点位
+int    func_index   = 0;
+int    key_value;
+int    Point        = 0;    // 菜单点位
+double Test_Angle   = 0;    // 调试用
+int16  Test_Duty    = 0;    // 调试用
 seekfree_assistant_oscilloscope_struct oscilloscope_data;
 
-menu_table table[25]=
+
+menu_table table[30]=
 {
     // current, up, down, back, enter
 
     // 菜单0
-    { 0, 23,  2,  0,  1, main_menu0},       // 踩点GPS一层
+    { 0, 27,  2,  0,  1, main_menu0},       // 踩点GPS一层
     { 1,  1,  1,  0,  1, CaiDian_menu},     // 踩点GPS二层
 
     // 菜单1
-    { 2,  0,  7,  2,  3, main_menu1},       // PID一层
-    { 3,  3,  3,  2,  4, PID_menu},         // PID二层
-    { 4,  4,  5,  3,  4, P_menu},           // P
-    { 5,  4,  6,  3,  5, I_menu},           // I
-    { 6,  5,  6,  3,  6, D_menu},           // D
+    { 2,  0, 11,  2,  3, main_menu1},       // PID一层
+    { 3,  4,  4,  2,  5, ServoPID},         // ServoPID二层
+    { 4,  3,  3,  2,  8, MotorPID},         // MotorPID二层
+    { 5,  7,  6,  3,  5, ServoP_menu},      // ServoP
+    { 6,  5,  7,  3,  6, ServoI_menu},      // ServoI
+    { 7,  6,  5,  3,  7, ServoD_menu},      // ServoD
+    { 8,  9, 10,  4,  8, MotorP_menu},      // MotorP
+    { 9, 10,  8,  4,  9, MotorD_menu},      // MotorI
+    {10,  8,  9,  4, 10, MotorI_menu},      // MotorD
 
     // 菜单2
-    { 7,  2,  9,  7,  8, main_menu2},        // 运行GPS显示一层
-    { 8,  8,  8,  7,  8, GPS_menu},          // 运行GPS显示二层
+    {11,  2, 13, 11, 12, main_menu2},        // 运行GPS显示一层
+    {12, 12, 12, 11, 12, GPS_menu},          // 运行GPS显示二层
 
     // 菜单3
-    { 9,  7, 13,  9, 10, main_menu3},        // 调速,舵机机械中值，换点距离
-    {10, 10, 11,  9, 10, spd_menu},          // 调速
-    {11, 10, 12,  9, 11, Distance_menu},     // 换点距离
-    {12, 11, 12,  9, 12, serve_mid_menu},    // 舵机中值
+    {13, 11, 17, 13, 14, main_menu3},        // 调速,舵机机械中值，换点距离
+    {14, 16, 15, 13, 14, spd_menu},          // 调速
+    {15, 14, 16, 13, 15, Distance_menu},     // 换点距离
+    {16, 15, 14, 13, 16, serve_mid_menu},    // 舵机中值
 
     // 菜单4
-    {13,  9, 15, 13, 14, main_menu4},        // 遥控模式一层
-    {14, 14, 14, 13, 14, RemoteCtrl_menu},   // 遥控模式二层
+    {17, 13, 19, 17, 18, main_menu4},        // 遥控模式一层
+    {18, 18, 18, 17, 18, RemoteCtrl_menu},   // 遥控模式二层
 
     // 菜单5
-    {15, 13, 17, 15, 16, main_menu5},        // GPS点位查看一层
-    {16, 16, 16, 15, 16, Points_menu},       // GPS点位查看二层
+    {19, 17, 21, 19, 20, main_menu5},        // GPS点位查看一层
+    {20, 20, 20, 19, 20, Points_menu},       // GPS点位查看二层
 
     // 菜单6
-    {17, 15, 19, 17, 18, main_menu6},        // 摄像头图像一层
-    {18, 18, 18, 17, 18, ZongZuanF} ,        // 摄像头图像二层
+    {21, 19, 23, 21, 22, main_menu6},        // 摄像头图像一层
+    {22, 22, 22, 21, 22, ZongZuanF} ,        // 摄像头图像二层
 
     // 菜单7
-    {19, 17, 21, 19, 20, main_menu7},        // 陀螺仪一层
-    {20, 20, 20, 19, 20, Imu963_menu},       // 陀螺仪二层
+    {23, 21, 25, 23, 24, main_menu7},        // 陀螺仪一层
+    {24, 24, 24, 23, 24, Imu963_menu},       // 陀螺仪二层
 
     // 菜单8
-    {21, 19, 23, 22, 22, main_menu8},        // Flash一层
-    {22, 22, 22, 21, 22, Flash_menu},        // Flash二层
+    {25, 23, 27, 25, 26, main_menu8},        // Flash一层
+    {26, 26, 26, 25, 26, Flash_menu},        // Flash二层
 
     // 菜单9
-    {23, 21,  0, 23, 24, main_menu9},        // 舵机测试一层
-    {24, 24, 24, 23, 24, Servo_menu}         // 舵机测试二层
+    {27, 25,  0, 27, 28, main_menu9},        // 舵机测试一层
+    {28, 28, 28, 27, 28, Servo_menu}         // 舵机测试二层
 
 
 
@@ -252,18 +259,18 @@ void CaiDian_menu(void)
 
 }
 
-void PID_menu(void)
+void ServoPID(void)
 {
-    ips200_show_string(0, 16 * 0, "P:");
-    ips200_show_string(0, 16 * 1, "I:");
-    ips200_show_string(0, 16 * 2, "D:");
-
-    ips200_show_float(16, 16 * 0, Parameter_set0.ServePID[0], 2, 3);
-    ips200_show_float(16, 16 * 1, Parameter_set0.ServePID[1], 2, 3);
-    ips200_show_float(16, 16 * 2, Parameter_set0.ServePID[2], 2, 3);
-
-    ips200_show_string(0, 16 * 3, "Enter to fix");
+    ips200_show_string(0, 16 * 0, "-->ServePID");
+    ips200_show_string(0, 16 * 1, "   MotorPID");
 }
+
+void MotorPID(void)
+{
+    ips200_show_string(0, 16 * 0, "   ServePID");
+    ips200_show_string(0, 16 * 1, "-->MotorPID");
+}
+
 
 void GPS_menu(void)
 {
@@ -287,17 +294,19 @@ void GPS_menu(void)
     ips200_show_string(  0, 16 * 5, "Gps_Yaw:");
     ips200_show_string(  0, 16 * 6, "Gps_Yaw2:");
     ips200_show_string(  0, 16 * 7, "Yaw:");
-    ips200_show_string(  0, 16 * 8, "KEY1:K+0.05");
-    ips200_show_string(120, 16 * 8, "KEY2:K-0.05");
-    ips200_show_float( 64, 16 * 1, gnss.latitude , 4, 6);
-    ips200_show_float( 64, 16 * 2, gnss.longitude, 4, 6);
-    ips200_show_uint (216, 16 * 1, gnss.state    , 1);
-    ips200_show_float(200, 16 * 2, K_Gps         , 1, 2);
-    ips200_show_float( 88, 16 * 3, FilterPoint_Lat, 4, 6);
-    ips200_show_float( 88, 16 * 4, FilterPoint_Lon, 4, 6);
-    ips200_show_float( 72, 16 * 5, Gps_Yaw        , 4, 6);
-    ips200_show_float( 72, 16 * 6, Gps_Yaw2       , 4, 6);
-    ips200_show_float( 72, 16 * 7, Yaw            , 4, 6);
+    ips200_show_string(  0, 16 * 8, "Angle:");
+    ips200_show_string(  0, 16 * 9, "KEY1:K+0.05");
+    ips200_show_string(120, 16 * 9, "KEY2:K-0.05");
+    ips200_show_float ( 64, 16 * 1, gnss.latitude  , 4, 6);
+    ips200_show_float ( 64, 16 * 2, gnss.longitude , 4, 6);
+    ips200_show_uint  (216, 16 * 1, gnss.state     , 1);
+    ips200_show_float (200, 16 * 2, K_Gps          , 1, 2);
+    ips200_show_float ( 88, 16 * 3, FilterPoint_Lat, 4, 6);
+    ips200_show_float ( 88, 16 * 4, FilterPoint_Lon, 4, 6);
+    ips200_show_float ( 72, 16 * 5, Gps_Yaw        , 4, 6);
+    ips200_show_float ( 72, 16 * 6, Gps_Yaw2       , 4, 6);
+    ips200_show_float ( 72, 16 * 7, Yaw            , 4, 6);
+    ips200_show_float ( 48, 16 * 8, Angle          , 4, 6);
 }
 
 void spd_menu(void)
@@ -308,9 +317,9 @@ void spd_menu(void)
     ips200_show_string( 0, 16 * 3, "KEY1:Duty+1000");
     ips200_show_string( 0, 16 * 4, "KEY2:Duty-1000");
     ips200_show_string( 0, 16 * 5, "KEY3:Save");
-    ips200_show_int(  136, 16 * 0, Parameter_set0.Speed_Duty, 5);
-    ips200_show_float(136, 16 * 1, Parameter_set0.Distance, 2, 2);
-    ips200_show_int(  136, 16 * 2, Parameter_set0.Serve_Mid, 4);
+    ips200_show_int(   96, 16 * 0, Parameter_set0.Speed_Duty, 5);
+    ips200_show_float( 96, 16 * 1, Parameter_set0.Distance, 2, 2);
+    ips200_show_int(   96, 16 * 2, Parameter_set0.Serve_Mid, 4);
 
 }
 
@@ -323,9 +332,9 @@ void Distance_menu(void)
     ips200_show_string( 0, 16 * 3, "KEY1:Distance+0.5");
     ips200_show_string( 0, 16 * 4, "KEY2:Distance-0.5");
     ips200_show_string( 0, 16 * 5, "KEY3:Save");
-    ips200_show_int(  136, 16 * 0, Parameter_set0.Speed_Duty, 5);
-    ips200_show_float(136, 16 * 1, Parameter_set0.Distance, 2, 2);
-    ips200_show_int(  136, 16 * 2, Parameter_set0.Serve_Mid, 4);
+    ips200_show_int(   96, 16 * 0, Parameter_set0.Speed_Duty, 5);
+    ips200_show_float( 96, 16 * 1, Parameter_set0.Distance, 2, 2);
+    ips200_show_int(   96, 16 * 2, Parameter_set0.Serve_Mid, 4);
 
 
 }
@@ -335,9 +344,9 @@ void serve_mid_menu(void)
     ips200_show_string(0, 16 * 0, "   Speed   :");
     ips200_show_string(0, 16 * 1, "   Distance:");
     ips200_show_string(0, 16 * 2, "-->ServeMid:");
-    ips200_show_int(  136, 16 * 0, Parameter_set0.Speed_Duty, 5);
-    ips200_show_float(136, 16 * 1, Parameter_set0.Distance, 2, 2);
-    ips200_show_int(  136, 16 * 2, Parameter_set0.Serve_Mid, 4);
+    ips200_show_int(   96, 16 * 0, Parameter_set0.Speed_Duty, 5);
+    ips200_show_float( 96, 16 * 1, Parameter_set0.Distance, 2, 2);
+    ips200_show_int(   96, 16 * 2, Parameter_set0.Serve_Mid, 4);
 
 }
 
@@ -408,20 +417,28 @@ void Imu963_menu()
     ips200_show_string( 0, 16 * 0, "IMU_Angle:");
     ips200_show_string( 0, 16 * 1, "IMU_Data.gyro_z:");
     ips200_show_string( 0, 16 * 2, "MAX_IMU_Data_gyro_z:");
-    if(Z_360 >180)
-    {
-        Z_360 -= 360;
-    }
-    ips200_show_float( 80, 16 * 0, Z_360, 3, 3);
+    ips200_show_string( 0, 16 * 3, "angle[0]:");
+    ips200_show_string( 0, 16 * 4, "angle[1]:");
+    ips200_show_string( 0, 16 * 5, "angle[2]:");
+
+    ips200_show_float( 80, 16 * 0, Z_360 > 180 ? Z_360 - 360 : Z_360, 3, 3);
     ips200_show_float(128, 16 * 1, IMU_Data.gyro_z, 3, 3);
     ips200_show_float(160, 16 * 2, MAX_IMU_Data_gyro_z, 3, 3);
+    ips200_show_float( 72, 16 * 3, angle[0], 3, 3);
+    ips200_show_float( 72, 16 * 4, angle[1], 3, 3);
+    ips200_show_float( 72, 16 * 5, angle[2], 3, 3);
 
-    oscilloscope_data.data[0] = IMU_Data.gyro_z;
-    oscilloscope_data.data[1] = MAX_IMU_Data_gyro_z;
-    oscilloscope_data.data[2] = 0;
-    oscilloscope_data.data[3] = 0;
-    seekfree_assistant_oscilloscope_send(&oscilloscope_data);
-    system_delay_ms(5);
+   seekfree_assistant_oscilloscope_send(&oscilloscope_data);
+   oscilloscope_data.data[0] = IMU_Data.gyro_z;
+   oscilloscope_data.data[1] = MAX_IMU_Data_gyro_z;
+   oscilloscope_data.data[2] = 0;
+   oscilloscope_data.data[3] = 0;
+   oscilloscope_data.data[4] = 0;
+   oscilloscope_data.data[5] = angle[0];
+   oscilloscope_data.data[6] = angle[1];
+   oscilloscope_data.data[7] = angle[2];
+    
+    system_delay_ms(10);
 }
 
 void Flash_menu()
@@ -447,45 +464,173 @@ void Servo_menu()
 
 /////////////////////////////////三层菜单-------------------------------------------------
 
-void P_menu(void)
+void ServoP_menu(void)
 {
-    ips200_show_string(  0, 16 * 0, "-->P:");
-    ips200_show_string(  0, 16 * 1, "   I:");
-    ips200_show_string(  0, 16 * 2, "   D:");
-    ips200_show_string(  0, 16 * 3, "KEY1:P+0.1");
-    ips200_show_string(120, 16 * 3, "KEY2:P-0.1");
-    ips200_show_string(  0, 16 & 4, "KEY3:Save");
-    ips200_show_string(120, 16 * 4, "KEY4:Get PID");
-    ips200_show_float  (80, 16 * 0,Parameter_set0.ServePID[0], 2, 3);
-    ips200_show_float  (80, 16 * 1,Parameter_set0.ServePID[1], 2, 3);
-    ips200_show_float  (80, 16 * 2,Parameter_set0.ServePID[2], 2, 3);
+    ips200_show_string(  0, 16 * 0, "-->ServoP:");
+    ips200_show_string(  0, 16 * 1, "   ServoI:");
+    ips200_show_string(  0, 16 * 2, "   ServoD:");
+    ips200_show_string(  0, 16 * 3, "Angle:");
+    ips200_show_string(  0, 16 * 4, "Z_360:");
+    ips200_show_string(  0, 16 * 5, "Angle_Error:");
+    ips200_show_string(  0, 16 * 6, "Servo_Angle:");
+    ips200_show_string(  0, 16 * 7, "PID.output:");
+    ips200_show_string(  0, 16 * 8, "KEY1:P+0.1");
+    ips200_show_string(120, 16 * 8, "KEY2:P-0.1");
+    ips200_show_string(  0, 16 * 9, "KEY3:Angle+10");
+    ips200_show_string(120, 16 * 9, "KEY4:Angle-10");
+    ips200_show_float ( 80, 16 * 0,Parameter_set0.ServePID[0], 2, 3);
+    ips200_show_float ( 80, 16 * 1,Parameter_set0.ServePID[1], 2, 3);
+    ips200_show_float ( 80, 16 * 2,Parameter_set0.ServePID[2], 2, 3);
+    ips200_show_float ( 48, 16 * 3, Angle, 4, 6);
+    ips200_show_float ( 48, 16 * 4, Z_360 > 180 ? Z_360 - 360 : Z_360, 3, 3);
+    ips200_show_float ( 96, 16 * 5, Angle_Error, 3, 6);
+    ips200_show_float ( 96, 16 * 6, Servo_Angle, 3, 3);
+    ips200_show_float ( 88, 16 * 7, PID_SERVO.output, 3, 6);
+
+    seekfree_assistant_oscilloscope_send(&oscilloscope_data);
+    oscilloscope_data.data[0] = PID_SERVO.output;
+    oscilloscope_data.data[1] = Servo_Angle;
+    oscilloscope_data.data[2] = Angle_Error;
+    oscilloscope_data.data[3] = Angle;
+
 }
 
-void I_menu(void)
+void ServoI_menu(void)
 {
-    ips200_show_string(0, 16 * 0, "   P:");
-    ips200_show_string(0, 16 * 1, "-->I:");
-    ips200_show_string(0, 16 * 2, "   D:");
-    ips200_show_string(  0, 16 * 3, "KEY1:I+0.1");
-    ips200_show_string(120, 16 * 3, "KEY2:I-0.1");
-    ips200_show_string(  0, 16 & 4, "KEY3:Save");
-    ips200_show_string(120, 16 * 4, "KEY4:Get PID");
-    ips200_show_float  (80, 16 * 0,Parameter_set0.ServePID[0], 2, 3);
-    ips200_show_float  (80, 16 * 1,Parameter_set0.ServePID[1], 2, 3);
-    ips200_show_float  (80, 16 * 2,Parameter_set0.ServePID[2], 2, 3);
+    ips200_show_string(  0, 16 * 0, "   ServoP:");
+    ips200_show_string(  0, 16 * 1, "-->ServoI:");
+    ips200_show_string(  0, 16 * 2, "   ServoD:");
+    ips200_show_string(  0, 16 * 3, "Angle:");
+    ips200_show_string(  0, 16 * 4, "Z_360:");
+    ips200_show_string(  0, 16 * 5, "Angle_Error:");
+    ips200_show_string(  0, 16 * 6, "Servo_Angle:");
+    ips200_show_string(  0, 16 * 7, "PID.output:");
+    ips200_show_string(  0, 16 * 8, "KEY1:I+0.1");
+    ips200_show_string(120, 16 * 8, "KEY2:I-0.1");
+    ips200_show_string(  0, 16 * 9, "KEY3:Save");
+    ips200_show_string(120, 16 * 9, "KEY4:Get PID");
+    ips200_show_float ( 80, 16 * 0,Parameter_set0.ServePID[0], 2, 3);
+    ips200_show_float ( 80, 16 * 1,Parameter_set0.ServePID[1], 2, 3);
+    ips200_show_float ( 80, 16 * 2,Parameter_set0.ServePID[2], 2, 3);
+    ips200_show_float ( 48, 16 * 3, Angle, 4, 6);
+    ips200_show_float ( 48, 16 * 4, Z_360 > 180 ? Z_360 - 360 : Z_360, 3, 3);
+    ips200_show_float ( 96, 16 * 5, Angle_Error, 3, 6);
+    ips200_show_float ( 96, 16 * 6, Servo_Angle, 3, 3);
+    ips200_show_float ( 88, 16 * 7, PID_SERVO.output, 3, 6);
+
+    seekfree_assistant_oscilloscope_send(&oscilloscope_data);
+    oscilloscope_data.data[0] = PID_SERVO.output;
+    oscilloscope_data.data[1] = Servo_Angle;
+    oscilloscope_data.data[2] = Angle_Error;
+    oscilloscope_data.data[3] = Angle;
 }
-void D_menu(void)
+void ServoD_menu(void)
 {
-    ips200_show_string(0, 16 * 0, "   P:");
-    ips200_show_string(0, 16 * 1, "   I:");
-    ips200_show_string(0, 16 * 2, "-->D:");
-    ips200_show_string(  0, 16 * 3, "KEY1:D+0.1");
-    ips200_show_string(120, 16 * 3, "KEY2:D-0.1");
-    ips200_show_string(  0, 16 & 4, "KEY3:Save");
-    ips200_show_string(120, 16 * 4, "KEY4:Get PID");
-    ips200_show_float  (80, 16 * 0,Parameter_set0.ServePID[0], 2, 3);
-    ips200_show_float  (80, 16 * 1,Parameter_set0.ServePID[1], 2, 3);
-    ips200_show_float  (80, 16 * 2,Parameter_set0.ServePID[2], 2, 3);
+    ips200_show_string(  0, 16 * 0, "   ServoP:");
+    ips200_show_string(  0, 16 * 1, "   ServoI:");
+    ips200_show_string(  0, 16 * 2, "-->ServoD:");
+    ips200_show_string(  0, 16 * 3, "Angle:");
+    ips200_show_string(  0, 16 * 4, "Z_360:");
+    ips200_show_string(  0, 16 * 5, "Angle_Error:");
+    ips200_show_string(  0, 16 * 6, "Servo_Angle:");
+    ips200_show_string(  0, 16 * 7, "PID.output:");
+    ips200_show_string(  0, 16 * 8, "KEY1:D+0.1");
+    ips200_show_string(120, 16 * 8, "KEY2:D-0.1");
+    ips200_show_string(  0, 16 * 9, "KEY3:Angle+10");
+    ips200_show_string(120, 16 * 9, "KEY4:Angle-10");
+    ips200_show_float ( 80, 16 * 0,Parameter_set0.ServePID[0], 2, 3);
+    ips200_show_float ( 80, 16 * 1,Parameter_set0.ServePID[1], 2, 3);
+    ips200_show_float ( 80, 16 * 2,Parameter_set0.ServePID[2], 2, 3);
+    ips200_show_float ( 48, 16 * 3, Angle, 4, 6);
+    ips200_show_float ( 48, 16 * 4, Z_360 > 180 ? Z_360 - 360 : Z_360, 3, 3);
+    ips200_show_float ( 96, 16 * 5, Angle_Error, 3, 6);
+    ips200_show_float ( 96, 16 * 6, Servo_Angle, 3, 3);
+    ips200_show_float ( 88, 16 * 7, PID_SERVO.output, 3, 6);
+
+    seekfree_assistant_oscilloscope_send(&oscilloscope_data);
+    oscilloscope_data.data[0] = PID_SERVO.output;
+    oscilloscope_data.data[1] = Servo_Angle;
+    oscilloscope_data.data[2] = Angle_Error;
+    oscilloscope_data.data[3] = Angle;
+}
+
+void MotorP_menu(void)
+{
+    ips200_show_string(  0, 16 * 0, "-->MotorP:");
+    ips200_show_string(  0, 16 * 1, "   MotorI:");
+    ips200_show_string(  0, 16 * 2, "   MotorD:");
+    ips200_show_string(  0, 16 * 3, "Test_Duty:");
+    ips200_show_string(  0, 16 * 4, "Encoder:");
+    ips200_show_string(  0, 16 * 5, "PID.error:");
+    ips200_show_string(  0, 16 * 6, "PID.output:");
+    ips200_show_string(  0, 16 * 7, "KEY1:P+0.1");
+    ips200_show_string(120, 16 * 7, "KEY2:P-0.1");
+    ips200_show_string(  0, 16 * 8, "KEY3:Duty+1000");
+    ips200_show_string(120, 16 * 8, "KEY4:Duty-1000");
+    ips200_show_float ( 80, 16 * 0,Parameter_set0.SpeedPID[0], 2, 3);
+    ips200_show_float ( 80, 16 * 1,Parameter_set0.SpeedPID[1], 2, 3);
+    ips200_show_float ( 80, 16 * 2,Parameter_set0.SpeedPID[2], 2, 3);
+    ips200_show_uint  ( 80, 16 * 3, Test_Duty, 5);
+    ips200_show_int   ( 64, 16 * 4, Encoder, 5);
+    ips200_show_float ( 80, 16 * 5, PID_MOTOR.current_error, 3, 3);
+    ips200_show_float ( 88, 16 * 6, PID_MOTOR.output, 3, 6);
+
+    seekfree_assistant_oscilloscope_send(&oscilloscope_data);
+    oscilloscope_data.data[0] = PID_MOTOR.output;
+    oscilloscope_data.data[1] = Encoder;
+}
+
+void MotorI_menu(void)
+{
+    ips200_show_string(  0, 16 * 0, "   MotorP:");
+    ips200_show_string(  0, 16 * 1, "-->MotorI:");
+    ips200_show_string(  0, 16 * 2, "   MotorD:");
+    ips200_show_string(  0, 16 * 3, "Test_Duty:");
+    ips200_show_string(  0, 16 * 4, "Encoder:");
+    ips200_show_string(  0, 16 * 5, "PID.error:");
+    ips200_show_string(  0, 16 * 6, "PID.output:");
+    ips200_show_string(  0, 16 * 7, "KEY1:P+0.1");
+    ips200_show_string(120, 16 * 7, "KEY2:P-0.1");
+    ips200_show_string(  0, 16 * 8, "KEY3:Duty+1000");
+    ips200_show_string(120, 16 * 8, "KEY4:Duty-1000");
+    ips200_show_float ( 80, 16 * 0,Parameter_set0.SpeedPID[0], 2, 3);
+    ips200_show_float ( 80, 16 * 1,Parameter_set0.SpeedPID[1], 2, 3);
+    ips200_show_float ( 80, 16 * 2,Parameter_set0.SpeedPID[2], 2, 3);
+    ips200_show_uint  ( 80, 16 * 3, Test_Duty, 5);
+    ips200_show_int   ( 64, 16 * 4, Encoder, 5);
+    ips200_show_float ( 80, 16 * 5, PID_MOTOR.current_error, 3, 3);
+    ips200_show_float ( 88, 16 * 6, PID_MOTOR.output, 3, 6);
+
+    seekfree_assistant_oscilloscope_send(&oscilloscope_data);
+    oscilloscope_data.data[0] = PID_MOTOR.output;
+    oscilloscope_data.data[1] = Encoder;
+}
+
+
+void MotorD_menu(void)
+{
+    ips200_show_string(  0, 16 * 0, "   MotorP:");
+    ips200_show_string(  0, 16 * 1, "   MotorI:");
+    ips200_show_string(  0, 16 * 2, "-->MotorD:");
+    ips200_show_string(  0, 16 * 3, "Test_Duty:");
+    ips200_show_string(  0, 16 * 4, "Encoder:");
+    ips200_show_string(  0, 16 * 5, "PID.error:");
+    ips200_show_string(  0, 16 * 6, "PID.output:");
+    ips200_show_string(  0, 16 * 7, "KEY1:P+0.1");
+    ips200_show_string(120, 16 * 7, "KEY2:P-0.1");
+    ips200_show_string(  0, 16 * 8, "KEY3:Duty+1000");
+    ips200_show_string(120, 16 * 8, "KEY4:Duty-1000");
+    ips200_show_float ( 80, 16 * 0,Parameter_set0.SpeedPID[0], 2, 3);
+    ips200_show_float ( 80, 16 * 1,Parameter_set0.SpeedPID[1], 2, 3);
+    ips200_show_float ( 80, 16 * 2,Parameter_set0.SpeedPID[2], 2, 3);
+    ips200_show_uint  ( 80, 16 * 3, Test_Duty, 5);
+    ips200_show_int   ( 64, 16 * 4, Encoder, 5);
+    ips200_show_float ( 80, 16 * 5, PID_MOTOR.current_error, 3, 3);
+    ips200_show_float ( 88, 16 * 6, PID_MOTOR.output, 3, 6);
+
+    seekfree_assistant_oscilloscope_send(&oscilloscope_data);
+    oscilloscope_data.data[0] = PID_MOTOR.output;
+    oscilloscope_data.data[1] = Encoder;
 }
 
 void ZongZuanF(void)
@@ -528,8 +673,8 @@ void Key_Ctrl_Menu()
             GL_CRC();
 
         }
-        // P调节
-        if(func_index == 4)
+        // ServoP调节
+        if(func_index == 5)
         {
             if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
             {
@@ -541,12 +686,16 @@ void Key_Ctrl_Menu()
             }
             if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
             {
-                FLASH_SAV_PAR();
+                Test_Angle += 10;
+            }
+            if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
+            {
+                Test_Angle -= 10;
             }
         }
 
-        // I调节
-        if(func_index == 5)
+        // ServoI调节
+        if(func_index == 6)
         {
             if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
             {
@@ -560,10 +709,14 @@ void Key_Ctrl_Menu()
             {
                 FLASH_SAV_PAR();
             }
+            if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
+            {
+                FLASH_GET_PAR();
+            }
         }
 
-        // D调节
-        if(func_index == 6)
+        // ServoD调节
+        if(func_index == 7)
         {
             if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
             {
@@ -575,11 +728,84 @@ void Key_Ctrl_Menu()
             }
             if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
             {
-                FLASH_SAV_PAR();
+                Test_Angle += 10;
+            }
+            if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
+            {
+                Test_Angle -= 10;
             }
         }
 
+        // MotorP调节
         if(func_index == 8)
+        {
+            if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
+            {
+                Parameter_set0.SpeedPID[0] += 0.1;
+            }
+            if(key_get_state(KEY_2) == KEY_SHORT_PRESS)
+            {
+                Parameter_set0.SpeedPID[0] -= 0.1;
+            }
+            if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
+            {
+                Test_Duty += 1000;
+                PIDIncMotorCtrl(Test_Duty);
+            }
+            if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
+            {
+                Test_Duty -= 1000;
+                PIDIncMotorCtrl(Test_Duty);
+            }
+        }
+
+        // MotorI调节
+        if(func_index == 9)
+        {
+            if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
+            {
+                Parameter_set0.SpeedPID[1] += 0.1;
+            }
+            if(key_get_state(KEY_2) == KEY_SHORT_PRESS)
+            {
+                Parameter_set0.SpeedPID[1] -= 0.1;
+            }
+            if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
+            {
+                Test_Duty += 1000;
+                PIDIncMotorCtrl(Test_Duty);
+            }
+            if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
+            {
+                Test_Duty -= 1000;
+                PIDIncMotorCtrl(Test_Duty);
+            }
+        }
+
+        //MotorD调节
+        if(func_index == 10)
+        {
+            if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
+            {
+                Parameter_set0.SpeedPID[2] += 0.1;
+            }
+            if(key_get_state(KEY_2) == KEY_SHORT_PRESS)
+            {
+                Parameter_set0.SpeedPID[2] -= 0.1;
+            }
+            if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
+            {
+                Test_Duty += 1000;
+                PIDIncMotorCtrl(Test_Duty);
+            }
+            if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
+            {
+                Test_Duty -= 1000;
+                PIDIncMotorCtrl(Test_Duty);
+            }
+        }
+
+        if(func_index == 12)
         {
             if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
             {
@@ -598,7 +824,7 @@ void Key_Ctrl_Menu()
         }
 
         // 调试速度
-        if(func_index == 10)
+        if(func_index == 14)
         {
             if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
             {
@@ -615,7 +841,7 @@ void Key_Ctrl_Menu()
         }
 
         // 换点距离
-        if(func_index == 11)
+        if(func_index == 15)
         {
             if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
             {
@@ -631,7 +857,8 @@ void Key_Ctrl_Menu()
             }
         }
 
-        if(func_index == 16)                                       //点位查看调节
+        //点位查看调节
+        if(func_index == 20)                                       
         {
             // 拨码开关在上表示点位切换
             if(!gpio_get_level(SWITCH1))
@@ -678,7 +905,7 @@ void Key_Ctrl_Menu()
 
         }
 
-        if(func_index == 20)
+        if(func_index == 24)
         {
             if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
             {
@@ -686,7 +913,7 @@ void Key_Ctrl_Menu()
             }
         }
 
-        if(func_index == 22)
+        if(func_index == 26)
         {
 
             // 按下KEY1从Flash中获取经纬度数据
@@ -708,13 +935,14 @@ void Key_Ctrl_Menu()
             if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
             {
                 ips200_clear();
-                func_index = 16;
+                func_index = 20;
                 table[func_index].current_operation();
             }
         }
 
-        if(func_index == 24)
+        if(func_index == 28)
         {
+            // 要测试时请注释掉PDLocServoCtrl()中的Servo_Set
             if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
             {
                 Servo_Angle += 10;

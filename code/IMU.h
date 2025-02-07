@@ -33,6 +33,7 @@ typedef struct                                                 // IMU参数结构体
 
 //===================================================全局变量BEG===================================================
 extern IMU_param_t IMU_Data;                                   // IMU数据
+extern gyro_param_t Gyro_Offset;                               // 零飘参数
 extern float gyro_Offset_flag;                                 // 标志位，用于指示陀螺仪零偏校准是否完成
 extern float MAX_IMU_Data_gyro_z;                              // Z轴抖动最大值
 extern float Z_360;                                            // 用于存储Z轴的360度积分值

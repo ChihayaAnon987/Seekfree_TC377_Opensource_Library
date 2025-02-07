@@ -52,6 +52,13 @@ IFX_INTERRUPT(cc60_pit_ch0_isr, CCU6_0_CH0_INT_VECTAB_NUM, CCU6_0_CH0_ISR_PRIORI
         IMU_YAW_integral();  //积分出角度值
     }
     AHRS_getYawPitchRoll(angle);
+//    if(kalman_Offset_flag == 0)
+//    {
+//        Kalman_Offset();
+//    }
+
+
+
 
 
 }

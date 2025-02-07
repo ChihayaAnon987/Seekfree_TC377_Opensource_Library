@@ -47,7 +47,7 @@ void IMU_YAW_integral()
     }
     
     IMU_Data.gyro_z = imu963ra_gyro_transition(imu963ra_gyro_z - Gyro_Offset.Zdata);   // 需要修改，应该不需要 * PI / 180
-    if(fabs(IMU_Data.gyro_z) >= 0.35)
+    if(fabs(IMU_Data.gyro_z) >= 0.25)
     {
         Z_360 += IMU_Data.gyro_z * 0.01;
     }

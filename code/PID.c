@@ -8,7 +8,7 @@
 #include "zf_common_headfile.h"
 
 /*
-    舵机和电机的PID算法参考：[链接](https://mp.weixin.qq.com/s/vwganbbwu0eX2j-ZmxWk_A)
+    舵机和电机的PID算法参考：[链接](https://mp.weixin.qq.com/s/zJiQGuqU5JXgHxL_FXBWrQ)
 */
 
 PIDController PID_Init;   // 用于 PID 初始化
@@ -57,7 +57,7 @@ float FloatClip(float x, float low, float up)
 float PidLocCtrl(PIDController * pid, float error)
 {
     pid->integrator += error;
-    FloatClip(pid->integrator, -pid->imax, pid->imax);
+    pid->integrator = FloatClip(pid->integrator, -pid->imax, pid->imax);
 
     pid->out_p = pid->Kp * error;
     pid->out_i = pid->Ki * pid->integrator;
@@ -152,7 +152,7 @@ void PIDIncMotorCtrl(int16 TARGET_MOTOR_DUTY)
     PID_MOTOR.output += Parameter_set0.SpeedPID[0] * (PID_MOTOR.current_error - PID_MOTOR.last_error) +
                         Parameter_set0.SpeedPID[1] * PID_MOTOR.current_error +
                         Parameter_set0.SpeedPID[2] * (PID_MOTOR.current_error - 2 * PID_MOTOR.last_error + PID_MOTOR.lastlast_error);
-    FloatClip(PID_MOTOR.output, -PWM_DUTY_MAX, PWM_DUTY_MAX);
+    PID_MOTOR.output = FloatClip(PID_MOTOR.output, -PWM_DUTY_MAX, PWM_DUTY_MAX);
     int32 MOTOR_DUTY = (int32)PID_MOTOR.output;
     if(MOTOR_DUTY >= 0)
     {

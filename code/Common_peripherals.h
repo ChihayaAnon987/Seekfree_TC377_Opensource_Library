@@ -58,7 +58,7 @@ extern int16 Servo_Angle;                                      // 舵机角度
 //===================================================函数声明BEG===================================================
 void CPU0_Init(void);                                          // CPU0 初始化
 void CPU1_Init(void);                                          // CPU1 初始化
-void Wireless_Init(uint8 Channel_Num);                         // 无线串口初始化
+void Oscilloscope_Init(uint8 Channel_Num);                     // 无线串口初始化
 void DRV8701_Init(void);                                       // 电机初始化
 void DRV8701_MOTOR_DRIVER(int Motor_PWM);                      // 电机驱动
 void Encoder_Get(void);                                        // 编码器读取

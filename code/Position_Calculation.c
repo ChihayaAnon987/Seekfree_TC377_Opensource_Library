@@ -78,7 +78,9 @@ void Track_Follow()
     // 如果点位在正北，那么方向角未经处理的值是0
     //Angle += 180;  // 原来默认对北发车，把这句话加上，表示对南发车
 
-
+    // 调试用
+    // Angle = Test_Angle;
+    
     if((Angle - Z_360) > 180)
     {
         Angle_Error = Angle - Z_360 - 360;

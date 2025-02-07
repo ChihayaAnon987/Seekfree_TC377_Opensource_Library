@@ -174,10 +174,14 @@ void FLASH_SAV_PAR()
     flash_union_buffer[0].float_type = Parameter_set0.ServePID[0];
     flash_union_buffer[1].float_type = Parameter_set0.ServePID[1];
     flash_union_buffer[2].float_type = Parameter_set0.ServePID[2];
-
+    
+    //电机PID
+    flash_union_buffer[3].float_type = Parameter_set0.SpeedPID[0];
+    flash_union_buffer[4].float_type = Parameter_set0.SpeedPID[1];
+    flash_union_buffer[5].float_type = Parameter_set0.SpeedPID[2];
     // 调试速度和换点距离
-    flash_union_buffer[3].int32_type = Parameter_set0.Speed_Duty;
-    flash_union_buffer[4].float_type = Parameter_set0.Distance;
+    flash_union_buffer[6].int32_type = Parameter_set0.Speed_Duty;
+    flash_union_buffer[7].float_type = Parameter_set0.Distance;
 
     // 指示灯亮，表明已读取
     gpio_set_level(LED1, 0);                                                 
@@ -203,9 +207,13 @@ void FLASH_GET_PAR()
         Parameter_set0.ServePID[1] = flash_union_buffer[1].float_type;
         Parameter_set0.ServePID[2] = flash_union_buffer[2].float_type;
 
+        // 电机PID
+        Parameter_set0.SpeedPID[0] = flash_union_buffer[3].float_type;
+        Parameter_set0.SpeedPID[1] = flash_union_buffer[4].float_type;
+        Parameter_set0.SpeedPID[2] = flash_union_buffer[5].float_type;
         // 调试速度和换点距离
-        Parameter_set0.Speed_Duty = flash_union_buffer[3].int32_type;
-        Parameter_set0.Distance   = flash_union_buffer[4].float_type;
+        Parameter_set0.Speed_Duty = flash_union_buffer[6].int32_type;
+        Parameter_set0.Distance   = flash_union_buffer[7].float_type;
         flash_buffer_clear();                                                    // 清空缓冲区
     }
 

@@ -12,7 +12,8 @@
 // volatile float integralFBhand, handdiff;
 // volatile uint32_t lastUpdate, now;          // 采样周期计数 单位 us
 // float f;
-
+kalman_param_t kalman_param;       // 零飘参数
+float kalman_Offset_flag = 0;
 volatile float q0, q1, q2, q3, w1, w2, w3;  // 全局四元数
 float angle[3] = {0};
 
@@ -86,9 +87,12 @@ void AHRS_init()
     // imu963ra_init();
 
     // 陀螺仪偏差
-    w1 = 0; // 0.095f;
-    w2 = 0; // 0.078f;
-    w3 = 0; // -0.014f;
+    // w1 = Gyro_Offset.Xdata; // 0.095f;
+    // w2 = Gyro_Offset.Ydata; // 0.078f;
+    // w3 = Gyro_Offset.Zdata; // -0.014f;
+    w1 = 0.095f;
+    w2 = 0.078f;
+    w3 = -0.014f;
 
     q0 = 1.0;
     q1 = 0;
@@ -301,8 +305,8 @@ void AHRS_AHRSupdate(float gx, float gy, float gz, float ax, float ay, float az,
 void AHRS_getQ(float * q)
 {
     // IMU_getValues(mygetqval);
-    AHRS_AHRSupdate(ANGLE_TO_RAD(imu963ra_gyro_transition(imu963ra_gyro_x)), 
-                    ANGLE_TO_RAD(imu963ra_gyro_transition(imu963ra_gyro_y)), 
+    AHRS_AHRSupdate(ANGLE_TO_RAD(imu963ra_gyro_transition(imu963ra_gyro_x)),
+                    ANGLE_TO_RAD(imu963ra_gyro_transition(imu963ra_gyro_y)),
                     ANGLE_TO_RAD(imu963ra_gyro_transition(imu963ra_gyro_z)),
                     imu963ra_acc_x, imu963ra_acc_y, imu963ra_acc_z,
                     imu963ra_mag_x, imu963ra_mag_y, imu963ra_mag_z);
@@ -331,19 +335,32 @@ void AHRS_getYawPitchRoll(float * angles)
     float q[4];             // 四元数
 
     AHRS_getQ(q);           // 更新全局四元数
-    angles[0] = -atan2(2 * q[1] * q[2] + 2 * q[0] * q[3], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) * 180 / PI;  // yaw
-    angles[0] = angles[0] - 90;
-    angles[1] = -asin(-2 * q[1] * q[3] + 2 * q[0] * q[2]) * 180 / PI;                                          // pitch
-    angles[2] = atan2(2 * q[2] * q[3] + 2 * q[0] * q[1], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1) * 180 / PI;   // roll
-    if (angles[0] < 0)
-    {
-        angles[0] += 360;  // 将 -+180度 转成 0-360度
-    }
+    angles[0] = atan2(2 * q[0] * q[1] + 2 * q[2] * q[3], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1) * 180 / PI;// 横滚角roll
+    angles[1] = asin( 2 * q[0] * q[2] - 2 * q[1] * q[3]) * 180 / PI;                                        // 俯仰角pitch                   
+    angles[2] = atan2(2 * q[0] * q[3] + 2 * q[1] * q[2], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) * 180 / PI;// 偏航角yaw
+    
+
 }
 
 
+void Kalman_Offset()
+{
+    kalman_param.Xdata = 0;
+    kalman_param.Ydata = 0;
+    kalman_param.Zdata = 0;
 
+    for(uint16_t i = 0; i < 1000; i++)
+    {
+        kalman_param.Xdata += angle[0];
+        kalman_param.Ydata += angle[1];
+        kalman_param.Zdata += angle[2];
+    }
+    kalman_param.Xdata /= 1000;
+    kalman_param.Ydata /= 1000;
+    kalman_param.Zdata /= 1000;
 
+    kalman_Offset_flag = 1;
+}
 
 /****************************************************************************************************
 //  @brief      矩阵加法

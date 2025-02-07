@@ -15,15 +15,13 @@ void CPU0_Init()
     gnss_init(TAU1201);                                             // GPS初始化
     SERVO_Init();                                                   // 舵机初始化
     DRV8701_Init();                                                 // 电机初始化
-    Wireless_Init(4);                                               // 无线串口初始化
     uart_receiver_init();                                           // sbus接收机初始化
     pit_ms_init(CCU60_CH0, 10);                                     // 中断，IMU数据采集，采样周期为0.01s
     pit_ms_init(CCU60_CH1, 5);                                      // 中断 编码器、舵机电机PID
     pit_ms_init(CCU61_CH0, 100);                                    // 中断 GPS数据解析
     encoder_dir_init(ENCODER1_TIM, ENCODER1_PLUS, ENCODER1_DIR);    // 编码器初始化
-    PID_GPS.imax = 1000.0;
-    PID_IMU.imax = 500.0;
-    PID_MOTOR.imax = 1000.0;
+    wireless_uart_init();                                           // 初始化无线串口
+    Oscilloscope_Init(8);                                           // 逐飞示波器初始化
 }
 
 void CPU1_Init()
@@ -36,11 +34,14 @@ void CPU1_Init()
     Buzzer_Check(200);                                              // 自检，表示初始化成功
 }
 
-void Wireless_Init(uint8 Channel_Num)
+void Oscilloscope_Init(uint8 Channel_Num)
 {
-    wireless_uart_init();                                           // 无线串口初始化
     seekfree_assistant_interface_init(SEEKFREE_ASSISTANT_WIRELESS_UART); // 逐飞助手初始化
-    oscilloscope_data.channel_num = Channel_Num;                    // 示波器通道数
+    for(int i = 0; i < Channel_Num; i++)
+    {
+        oscilloscope_data.data[i] = 0;
+    }
+    oscilloscope_data.channel_num = Channel_Num;
 }
 
 // DRV8701初始化

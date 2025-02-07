@@ -32,6 +32,8 @@ typedef struct
 //===================================================全局变量BEG===================================================
 extern Parameter_set Parameter_set0;                            // 参数集合
 extern seekfree_assistant_oscilloscope_struct oscilloscope_data;// 初始化逐飞助手示波器的结构体
+extern double Test_Angle;                                       // 调试用
+extern int16  Test_Duty;                                        // 调试用
 //===================================================全局变量END===================================================
 
 
@@ -54,7 +56,8 @@ void main_menu9(void);                                         // 主菜单9
 
 //===================================================二级菜单BEG===================================================
 void CaiDian_menu(void);                                       // 菜单：踩点
-void PID_menu(void);                                           // 菜单：PID参数调节
+void ServoPID(void);                                           // 菜单：ServoPID
+void MotorPID(void);                                           // 菜单：MotorPID
 void GPS_menu(void);                                           // 菜单：GPS
 void spd_menu(void);                                           // 菜单：速度
 void Distance_menu(void);                                      // 菜单：换点距离
@@ -69,9 +72,12 @@ void Servo_menu(void);                                         // 菜单：舵机
 
 
 //===================================================三级菜单BEG===================================================
-void P_menu(void);                                             // 菜单：P
-void I_menu(void);                                             // 菜单：I
-void D_menu(void);                                             // 菜单：D
+void ServoP_menu(void);                                        // 菜单：ServoP
+void ServoI_menu(void);                                        // 菜单：ServoI
+void ServoD_menu(void);                                        // 菜单：ServoD
+void MotorP_menu(void);                                        // 菜单：MotorP
+void MotorI_menu(void);                                        // 菜单：MotorI
+void MotorD_menu(void);                                        // 菜单：MotorD
 //===================================================三级菜单END===================================================
 
 
