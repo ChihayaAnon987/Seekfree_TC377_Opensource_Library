@@ -8,15 +8,15 @@
 #include "zf_common_headfile.h"
 
 
-int Track_Points_NUM  =   0;       // 当前追踪第几个点
+int Track_Points_NUM  =   1;       // 当前追踪第几个点
 double Angle_Error    =   0;       // 方向角与航向角之差
 float  Fusion_angle   =   0;       // GPS和IMU互补滤波后的角度
 float  Fusion_alpha   = 0.9;       // GPS和IMU互补滤波的权重
-int16  Speed          = 100;       // 速度
+int16  Target_Duty    =   0;       // 占空比
 
 void Stright_Some_Distance()
 {
-    double distance;
+    double distance = 0;
     if(gnss_flag)
     {
         gnss_flag = 0;
@@ -25,9 +25,11 @@ void Stright_Some_Distance()
         Start_Lon = gnss.longitude;
     }
     Servo_Set(SERVO_MOTOR_MID);
-    DRV8701_MOTOR_DRIVER(3000);
-    distance = get_two_points_distance(Start_Lat, Start_Lon, gnss.latitude, gnss.longitude);
-    while(distance < 10);
+    Target_Duty = 3000;
+    while(distance < 10)
+    {
+        distance = get_two_points_distance(Start_Lat, Start_Lon, gnss.latitude, gnss.longitude);
+    }
     if(gnss_flag)
     {
         gnss_flag = 0;
@@ -68,7 +70,13 @@ void GPS_IMU_Complementary_Filtering()
     }
 }
 
-// 核心循迹程序
+/****************************************************************************************************
+//  @brief      核心循迹逻辑
+//  @param      void
+//  @return     void
+//  @since
+//  Sample usage:
+****************************************************************************************************/
 void Track_Follow()
 {
     // 计算从第一个点到第二个点的方位角(单位：°)
@@ -99,10 +107,11 @@ void Track_Follow()
     // 3.加入舵机PD控制
     // 4.加入电机PID控制
     // 5.MPC控制和曲率前馈
+    // 1234均已实现的差不多，等待实际测试
     
     if(Track_Points_NUM == 1 || Track_Points_NUM == 2)
     {
-        DRV8701_MOTOR_DRIVER(3000);
+        Target_Duty = 3000;
     }
 
 

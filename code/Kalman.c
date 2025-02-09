@@ -12,7 +12,7 @@
 // volatile float integralFBhand, handdiff;
 // volatile uint32_t lastUpdate, now;          // 采样周期计数 单位 us
 // float f;
-kalman_param_t kalman_param;       // 零飘参数
+kalman_param_t Kalman_Offset = {0, 0, 0};       // 零飘参数
 float kalman_Offset_flag = 0;
 volatile float q0, q1, q2, q3, w1, w2, w3;  // 全局四元数
 float angle[3] = {0};
@@ -90,9 +90,9 @@ void AHRS_init()
     // w1 = Gyro_Offset.Xdata; // 0.095f;
     // w2 = Gyro_Offset.Ydata; // 0.078f;
     // w3 = Gyro_Offset.Zdata; // -0.014f;
-    w1 = 0.095f;
-    w2 = 0.078f;
-    w3 = -0.014f;
+    w1 = Gyro_Offset.Xdata;
+    w2 = Gyro_Offset.Ydata;
+    w3 = Gyro_Offset.Zdata;
 
     q0 = 1.0;
     q1 = 0;
@@ -127,7 +127,7 @@ void AHRS_AHRSupdate(float gx, float gy, float gz, float ax, float ay, float az,
     bz = 0.8351;
     // bx = 0.0024;
     // bz = 0.0051;
-    halfT = 0.005;
+    halfT = 0.0025;
 
     norm = invSqrt(ax * ax + ay * ay + az * az);
     ax = ax * norm * g;
@@ -332,34 +332,37 @@ void AHRS_getYawPitchRoll(float * angles)
     imu963ra_get_acc();     // 获取加速度计数据
     imu963ra_get_gyro();    // 获取陀螺仪数据
     imu963ra_get_mag();     // 获取磁力计数据
+
     float q[4];             // 四元数
-
     AHRS_getQ(q);           // 更新全局四元数
-    angles[0] = atan2(2 * q[0] * q[1] + 2 * q[2] * q[3], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1) * 180 / PI;// 横滚角roll
-    angles[1] = asin( 2 * q[0] * q[2] - 2 * q[1] * q[3]) * 180 / PI;                                        // 俯仰角pitch                   
-    angles[2] = atan2(2 * q[0] * q[3] + 2 * q[1] * q[2], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) * 180 / PI;// 偏航角yaw
-    
+     angles[0] = atan2(2 * q[0] * q[1] + 2 * q[2] * q[3], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1) * 180 / PI;// 横滚角roll
+     angles[1] = asin( 2 * q[0] * q[2] - 2 * q[1] * q[3]) * 180 / PI;                                        // 俯仰角pitch
+     angles[2] = atan2(2 * q[0] * q[3] + 2 * q[1] * q[2], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) * 180 / PI;// 偏航角yaw
 
+     if(angle[2] < 0)
+     {
+         angle[2] += 360;
+     }
 }
 
-
-void Kalman_Offset()
+void Kalman_Offset_Init()
 {
-    kalman_param.Xdata = 0;
-    kalman_param.Ydata = 0;
-    kalman_param.Zdata = 0;
+    static int i = 0;
+    
+    Kalman_Offset.Xdata += angle[0];
+    Kalman_Offset.Ydata += angle[1];
+    Kalman_Offset.Zdata += angle[2];
+    i++;
 
-    for(uint16_t i = 0; i < 1000; i++)
+
+    if(i == 999)
     {
-        kalman_param.Xdata += angle[0];
-        kalman_param.Ydata += angle[1];
-        kalman_param.Zdata += angle[2];
-    }
-    kalman_param.Xdata /= 1000;
-    kalman_param.Ydata /= 1000;
-    kalman_param.Zdata /= 1000;
+        Kalman_Offset.Xdata /= 1000;
+        Kalman_Offset.Ydata /= 1000;
+        Kalman_Offset.Zdata /= 1000;
 
-    kalman_Offset_flag = 1;
+        kalman_Offset_flag = 1;
+    }
 }
 
 /****************************************************************************************************

@@ -15,8 +15,7 @@ void CPU0_Init()
     gnss_init(TAU1201);                                             // GPS初始化
     SERVO_Init();                                                   // 舵机初始化
     DRV8701_Init();                                                 // 电机初始化
-    uart_receiver_init();                                           // sbus接收机初始化
-    pit_ms_init(CCU60_CH0, 10);                                     // 中断，IMU数据采集，采样周期为0.01s
+    pit_ms_init(CCU60_CH0, 5);                                      // 中断，IMU数据采集
     pit_ms_init(CCU60_CH1, 5);                                      // 中断 编码器、舵机电机PID
     pit_ms_init(CCU61_CH0, 100);                                    // 中断 GPS数据解析
     encoder_dir_init(ENCODER1_TIM, ENCODER1_PLUS, ENCODER1_DIR);    // 编码器初始化
@@ -27,6 +26,7 @@ void CPU0_Init()
 void CPU1_Init()
 {
     Buzzer_Init();                                                  // 蜂鸣器初始化
+//    uart_receiver_init();                                           // sbus接收机初始化
     KEY_Init();                                                     // 按键初始化
     //mt9v03x_init();                                                 // 总钻风初始化
     key_init(10);                                                   // 按键初始化

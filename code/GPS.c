@@ -42,6 +42,15 @@
        - 如果踩点时GPS数据已经偏移，可以通过显示GPS点位到屏幕，根据路径图手动修正部分偏移点位，结合GPS矫正导航，实现精准导航效果。
 */
 
+/*
+    Lat 0.000001 = 0.111319m
+    Lon 0.000001 = 0.061010m
+    Lat+0.000001 是 0°
+    Lat-0.000001 是 180°
+    Lon+0.000001 是 270°
+    Lon-0.000001 是 90°
+*/
+
 
 uint32 Point_NUM = 0;               // 已采集点数
 float K_Gps      = 0.5;             // 衔接部分的权重
@@ -54,7 +63,7 @@ double Start_Lon;                   // 发车的纬度
 double Straight_Lat;                // 直行10-20m的经度
 double Straight_Lon;                // 直行10-20m的纬度
 double Delta_Lat    = 0;            // 漂移经度
-double Delta_Lon    = 0;            // 漂移纬度   
+double Delta_Lon    = 0;            // 漂移纬度
 double Angle        = 0;            // 方位角
 double Delta_Angle  = 0;            // GPS与陀螺仪的正方向偏差角
 float  Gps_Yaw      = 0;            // GPS直接得到的偏航角
@@ -75,7 +84,8 @@ double GPS_GET_LOT[NUM_GPS_DATA];   // 经度
 // 按键采点函数
 void GL_CRC()
 {
-    if(key_get_state(KEY_1) == KEY_SHORT_PRESS)                                               //key1 按下
+    // KEY1或者通道3按下都可以记录点位
+    if(key_get_state(KEY_1) == KEY_SHORT_PRESS || Channal_3_Press_Flag)
     {
         if(gnss.state == 1)
         {

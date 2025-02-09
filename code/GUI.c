@@ -87,7 +87,7 @@ void main_menu0(void)
     ips200_show_string(  0, 16 * 0, "-->CaiDian   ");
     ips200_show_string(  0, 16 * 1, "   PID       ");
     ips200_show_string(  0, 16 * 2, "   GPS Show  ");
-    ips200_show_string(  0, 16 * 3, "   Speed     ");
+    ips200_show_string(  0, 16 * 3, "   Duty      ");
     ips200_show_string(  0, 16 * 4, "   RemoteCtrl");
     ips200_show_string(  0, 16 * 5, "   Points    ");
     ips200_show_string(  0, 16 * 6, "   Camera    ");
@@ -101,7 +101,7 @@ void main_menu1(void)
     ips200_show_string(  0, 16 * 0, "   CaiDian   ");
     ips200_show_string(  0, 16 * 1, "-->PID       ");
     ips200_show_string(  0, 16 * 2, "   GPS Show  ");
-    ips200_show_string(  0, 16 * 3, "   Speed     ");
+    ips200_show_string(  0, 16 * 3, "   Duty      ");
     ips200_show_string(  0, 16 * 4, "   RemoteCtrl");
     ips200_show_string(  0, 16 * 5, "   Points    ");
     ips200_show_string(  0, 16 * 6, "   Camera    ");
@@ -115,7 +115,7 @@ void main_menu2(void)
     ips200_show_string(  0, 16 * 0, "   CaiDian   ");
     ips200_show_string(  0, 16 * 1, "   PID       ");
     ips200_show_string(  0, 16 * 2, "-->GPS Show  ");
-    ips200_show_string(  0, 16 * 3, "   Speed     ");
+    ips200_show_string(  0, 16 * 3, "   Duty      ");
     ips200_show_string(  0, 16 * 4, "   RemoteCtrl");
     ips200_show_string(  0, 16 * 5, "   Points    ");
     ips200_show_string(  0, 16 * 6, "   Camera    ");
@@ -129,7 +129,7 @@ void main_menu3(void)
     ips200_show_string(  0, 16 * 0, "   CaiDian   ");
     ips200_show_string(  0, 16 * 1, "   PID       ");
     ips200_show_string(  0, 16 * 2, "   GPS Show  ");
-    ips200_show_string(  0, 16 * 3, "-->Speed     ");
+    ips200_show_string(  0, 16 * 3, "-->Duty      ");
     ips200_show_string(  0, 16 * 4, "   RemoteCtrl");
     ips200_show_string(  0, 16 * 5, "   Points    ");
     ips200_show_string(  0, 16 * 6, "   Camera    ");
@@ -143,7 +143,7 @@ void main_menu4(void)
     ips200_show_string(  0, 16 * 0, "   CaiDian   ");
     ips200_show_string(  0, 16 * 1, "   PID       ");
     ips200_show_string(  0, 16 * 2, "   GPS Show  ");
-    ips200_show_string(  0, 16 * 3, "   Speed     ");
+    ips200_show_string(  0, 16 * 3, "   Duty      ");
     ips200_show_string(  0, 16 * 4, "-->RemoteCtrl");
     ips200_show_string(  0, 16 * 5, "   Points    ");
     ips200_show_string(  0, 16 * 6, "   Camera    ");
@@ -157,7 +157,7 @@ void main_menu5(void)
     ips200_show_string(  0, 16 * 0, "   CaiDian   ");
     ips200_show_string(  0, 16 * 1, "   PID       ");
     ips200_show_string(  0, 16 * 2, "   GPS Show  ");
-    ips200_show_string(  0, 16 * 3, "   Speed     ");
+    ips200_show_string(  0, 16 * 3, "   Duty      ");
     ips200_show_string(  0, 16 * 4, "   RemoteCtrl");
     ips200_show_string(  0, 16 * 5, "-->Points    ");
     ips200_show_string(  0, 16 * 6, "   Camera    ");
@@ -171,7 +171,7 @@ void main_menu6(void)
     ips200_show_string(  0, 16 * 0, "   CaiDian   ");
     ips200_show_string(  0, 16 * 1, "   PID       ");
     ips200_show_string(  0, 16 * 2, "   GPS Show  ");
-    ips200_show_string(  0, 16 * 3, "   Speed     ");
+    ips200_show_string(  0, 16 * 3, "   Duty      ");
     ips200_show_string(  0, 16 * 4, "   RemoteCtrl");
     ips200_show_string(  0, 16 * 5, "   Points    ");
     ips200_show_string(  0, 16 * 6, "-->Camera    ");
@@ -185,7 +185,7 @@ void main_menu7(void)
     ips200_show_string(  0, 16 * 0, "   CaiDian   ");
     ips200_show_string(  0, 16 * 1, "   PID       ");
     ips200_show_string(  0, 16 * 2, "   GPS Show  ");
-    ips200_show_string(  0, 16 * 3, "   Speed     ");
+    ips200_show_string(  0, 16 * 3, "   Duty      ");
     ips200_show_string(  0, 16 * 4, "   RemoteCtrl");
     ips200_show_string(  0, 16 * 5, "   Points    ");
     ips200_show_string(  0, 16 * 6, "   Camera    ");
@@ -199,7 +199,7 @@ void main_menu8(void)
     ips200_show_string(  0, 16 * 0, "   CaiDian   ");
     ips200_show_string(  0, 16 * 1, "   PID       ");
     ips200_show_string(  0, 16 * 2, "   GPS Show  ");
-    ips200_show_string(  0, 16 * 3, "   Speed     ");
+    ips200_show_string(  0, 16 * 3, "   Duty      ");
     ips200_show_string(  0, 16 * 4, "   RemoteCtrl");
     ips200_show_string(  0, 16 * 5, "   Points    ");
     ips200_show_string(  0, 16 * 6, "   Camera    ");
@@ -213,7 +213,7 @@ void main_menu9(void)
     ips200_show_string(  0, 16 * 0, "   CaiDian   ");
     ips200_show_string(  0, 16 * 1, "   PID       ");
     ips200_show_string(  0, 16 * 2, "   GPS Show  ");
-    ips200_show_string(  0, 16 * 3, "   Speed     ");
+    ips200_show_string(  0, 16 * 3, "   Duty      ");
     ips200_show_string(  0, 16 * 4, "   RemoteCtrl");
     ips200_show_string(  0, 16 * 5, "   Points    ");
     ips200_show_string(  0, 16 * 6, "   Camera    ");
@@ -311,7 +311,7 @@ void GPS_menu(void)
 
 void spd_menu(void)
 {
-    ips200_show_string( 0, 16 * 0, "-->Speed   :");
+    ips200_show_string( 0, 16 * 0, "-->Duty    :");
     ips200_show_string( 0, 16 * 1, "   Distance:");
     ips200_show_string( 0, 16 * 2, "   ServeMid:");
     ips200_show_string( 0, 16 * 3, "KEY1:Duty+1000");
@@ -326,7 +326,7 @@ void spd_menu(void)
 void Distance_menu(void)
 {
 
-    ips200_show_string( 0, 16 * 0, "   Speed   :");
+    ips200_show_string( 0, 16 * 0, "   Duty    :");
     ips200_show_string( 0, 16 * 1, "-->Distance:");
     ips200_show_string( 0, 16 * 2, "   ServeMid:");
     ips200_show_string( 0, 16 * 3, "KEY1:Distance+0.5");
@@ -341,7 +341,7 @@ void Distance_menu(void)
 
 void serve_mid_menu(void)
 {
-    ips200_show_string(0, 16 * 0, "   Speed   :");
+    ips200_show_string(0, 16 * 0, "   Duty    :");
     ips200_show_string(0, 16 * 1, "   Distance:");
     ips200_show_string(0, 16 * 2, "-->ServeMid:");
     ips200_show_int(   96, 16 * 0, Parameter_set0.Speed_Duty, 5);
@@ -380,36 +380,48 @@ void RemoteCtrl_menu(void)
     }
     ips200_show_string(  0, 16 * 5, "state:");
     ips200_show_uint(   48, 16 * 5, uart_receiver.state, 1);
+    ips200_show_string( 64, 16 * 5, "finsh_flag:");
+    ips200_show_uint(  152, 16 * 5, uart_receiver.finsh_flag, 1);
     ips200_show_string(  0, 16 * 6, "Control_Flag:");
     ips200_show_uint(  104, 16 * 6, Control_Flag, 1);
-    ips200_show_string(  0, 16 * 7, "Sta_Stp_Flag:");
-    ips200_show_uint(  104, 16 * 7, RemoteCtrl_Start_Stop_Flag, 1);
-    ips200_show_string(  0, 16 * 8, "Motor_PWM:");
-    ips200_show_int (   80, 16 * 8 , RemoteCtrl_Speed, 4);
+    ips200_show_string(  0, 16 * 7, "Motor_PWM:");
+    ips200_show_int (   80, 16 * 7 , RemoteCtrl_Speed, 4);
 }
 
 void Points_menu(void)
 {
-    ips200_show_string(0, 16 * 0, "Lat:");
-    ips200_show_string(0, 16 * 1, "Lot:");
-    ips200_show_string(0, 16 * 2, "Point:");
-    ips200_show_string(0, 16 * 3, "Point_NUM:");
-    ips200_show_float(32, 16 * 0, GPS_GET_LAT[Point], 4, 6);
-    ips200_show_float(32, 16 * 1, GPS_GET_LOT[Point], 4, 6);
-    ips200_show_uint( 96, 16 * 2, Point + 1, 3);
-    ips200_show_uint( 96, 16 * 3, Point_NUM, 3);
-    
-    double Direction = get_two_points_azimuth(gnss.latitude, gnss.longitude, GPS_GET_LAT[Point], GPS_GET_LOT[Point]);
-    double Distance = get_two_points_distance(gnss.latitude, gnss.longitude, GPS_GET_LAT[Point], GPS_GET_LOT[Point]);
+    ips200_show_string( 16, 16 * 0, "Lat:");
+    ips200_show_string(128, 16 * 0, "Lon:");
+    ips200_show_uint  (184, 16 * 0, Point + 1, 3);
+    ips200_show_string(208, 16 * 0, "/");
+    ips200_show_uint  (216, 16 * 0, Point_NUM, 3);
+
+    int Page = Point / Page_Point_Num;
+    int RightArrow = Point % Page_Point_Num + 1;
+    ips200_show_string(0, 16 * RightArrow, "->");
+    for(int i = 1; i <= Page_Point_Num; i++)
+    {
+        ips200_show_float ( 16, 16 * i, GPS_GET_LAT[i - 1 + Page * Page_Point_Num], 3, 6);
+        ips200_show_float (136, 16 * i, GPS_GET_LOT[i - 1 + Page * Page_Point_Num], 3, 6);
+        if(i  + Page * 10 == Point_NUM)
+        {
+            break;
+        }
+    }
+
+    ips200_show_string(  0, 16 *  9, "1:Point-1/Lat+");
+    ips200_show_string(  0, 16 * 10, "2:Point+1/Lat-");
+    ips200_show_string(120, 16 *  9, "3:Save   /Lot+");
+    ips200_show_string(120, 16 * 10, "4:Print  /Lot-");
+
+    double Direction = get_two_points_azimuth(GPS_GET_LAT[0], GPS_GET_LOT[0], GPS_GET_LAT[1], GPS_GET_LOT[1]);
+    double Distance = get_two_points_distance(GPS_GET_LAT[0], GPS_GET_LOT[0], GPS_GET_LAT[1], GPS_GET_LOT[1]);
     ips200_show_string(0, 16 * 4, "Direction:");
     ips200_show_string(0, 16 * 5, "Distance:");
     ips200_show_float(96, 16 * 4, Direction, 3, 3);
-    ips200_show_float(96, 16 * 5, Distance , 3, 6);
+    ips200_show_float(96, 16 * 5, Distance , 5, 6);
 
-    ips200_show_string(0, 16 * 6, "KEY1:Point+1/Lat+");
-    ips200_show_string(0, 16 * 7, "KEY2:Point-1/Lat-");
-    ips200_show_string(0, 16 * 8, "KEY3:Save   /Lot+");
-    ips200_show_string(0, 16 * 9, "KEY4:       /Lot-");
+
 }
 
 void Imu963_menu()
@@ -431,12 +443,12 @@ void Imu963_menu()
    seekfree_assistant_oscilloscope_send(&oscilloscope_data);
    oscilloscope_data.data[0] = IMU_Data.gyro_z;
    oscilloscope_data.data[1] = MAX_IMU_Data_gyro_z;
-   oscilloscope_data.data[2] = 0;
-   oscilloscope_data.data[3] = 0;
-   oscilloscope_data.data[4] = 0;
+   oscilloscope_data.data[2] = imu963ra_mag_x;
+   oscilloscope_data.data[3] = imu963ra_mag_y;
+   oscilloscope_data.data[4] = imu963ra_mag_z;
    oscilloscope_data.data[5] = angle[0];
    oscilloscope_data.data[6] = angle[1];
-   oscilloscope_data.data[7] = angle[2];
+   oscilloscope_data.data[7] = angle[2] < 0 ? angle[2] -360 : angle[2];
     
     system_delay_ms(10);
 }
@@ -865,21 +877,30 @@ void Key_Ctrl_Menu()
             {
                 if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
                 {
-                    if(Point < Point_NUM - 1)
+                    if(Point > 0)
                     {
-                        Point = Point + 1;
+                        Point = Point - 1;
+                        ips200_clear();
                     }
                 }
                 if(key_get_state(KEY_2) == KEY_SHORT_PRESS)
                 {
-                    if(Point > 0)
+                    if(Point < Point_NUM - 1)
                     {
-                        Point = Point - 1;
+                        Point = Point + 1;
+                        ips200_clear();
                     }
                 }
                 if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
                 {
                     FLASH_FIX_GPS();
+                }
+                if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
+                {
+                    for(int i = 0; i < Point_NUM; i++)
+                    {
+                        printf("{ lat: %lf, lng: %lf, name: \"%d\"}\n",GPS_GET_LAT[i], GPS_GET_LOT[i], i);
+                    }
                 }
             }
             // 拨码开关在下表示点位设置
