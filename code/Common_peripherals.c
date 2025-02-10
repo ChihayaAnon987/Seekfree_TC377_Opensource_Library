@@ -8,6 +8,7 @@
 
 int16 Servo_Angle = SERVO_MOTOR_MID;
 int16 Encoder;
+float System_Time = 0;
 void CPU0_Init()
 {
     AHRS_init();                                                    // AHRS≥ı ºªØ
@@ -139,4 +140,8 @@ void KEY_Init()
 }
 
 
+void System_Time_Count()
+{
+    System_Time += 0.005;
+}
 

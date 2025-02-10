@@ -899,7 +899,7 @@ void Key_Ctrl_Menu()
                 {
                     for(int i = 0; i < Point_NUM; i++)
                     {
-                        printf("{ lat: %lf, lng: %lf, name: \"%d\"}\n",GPS_GET_LAT[i], GPS_GET_LOT[i], i);
+                        printf("{ lat: %lf, lng: %lf, name: \"%d\"}\r\n",GPS_GET_LAT[i], GPS_GET_LOT[i], i);
                     }
                 }
             }

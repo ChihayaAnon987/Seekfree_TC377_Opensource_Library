@@ -33,15 +33,15 @@ void FLASH_SAV_GPS()
         flash_write_page_from_buffer(FLASH_SECTION_INDEX, FLASH_PAGE_INDEX);
         flash_buffer_clear();
 
-        gpio_set_level(LED3, 0);                     //指示灯亮，表明已存储
-        system_delay_ms(1000);
-        gpio_set_level(LED3, 1);
+        gpio_set_level(LED1, 0);                     //指示灯亮，表明已存储
+        system_delay_ms(500);
+        gpio_set_level(LED1, 1);
     }
     else
     {
-        gpio_set_level(LED4, 0);                                                 //指示灯亮，表明没有点
-        system_delay_ms(1000);
-        gpio_set_level(LED4, 1);
+        gpio_set_level(LED2, 0);                                                 //指示灯亮，表明没有点
+        system_delay_ms(500);
+        gpio_set_level(LED2, 1);
     }
     if(flash_check(FLASH_SECTION_INDEX, FLASH_PAGE_INDEX - 1))                      // 判断是否有数据
     {
@@ -89,13 +89,13 @@ void FLASH_GET_GPS()
         flash_buffer_clear();                                                    // 清空缓冲区
         
         gpio_set_level(LED1, 0);                                                 //指示灯亮，表明已读取
-        system_delay_ms(1000);
+        system_delay_ms(500);
         gpio_set_level(LED1, 1);
     }
     else
     {
         gpio_set_level(LED2, 0);                                                 //指示灯亮，表明Flash中无数据
-        system_delay_ms(1000);
+        system_delay_ms(500);
         gpio_set_level(LED2, 1);
 
     }
@@ -138,9 +138,9 @@ void FLASH_FIX_GPS()
     flash_write_page_from_buffer(FLASH_SECTION_INDEX, FLASH_PAGE_INDEX);
     flash_buffer_clear();
 
-    gpio_set_level(LED3, 0);                     //指示灯亮，表明已存储
-    system_delay_ms(1000);
-    gpio_set_level(LED3, 1);
+    gpio_set_level(LED1, 0);                     //指示灯亮，表明已存储
+    system_delay_ms(500);
+    gpio_set_level(LED1, 1);
 }
 
 // 清除Flash数据
@@ -153,7 +153,7 @@ void FLASH_DEL_GPS()
         gpio_set_level(LED2, 0);
         gpio_set_level(LED3, 0);                                                    //指示灯亮，表明已删除
         gpio_set_level(LED4, 0);
-        system_delay_ms(1000);
+        system_delay_ms(500);
         gpio_set_level(LED1, 1);
         gpio_set_level(LED2, 1);
         gpio_set_level(LED3, 1);
@@ -185,10 +185,8 @@ void FLASH_SAV_PAR()
 
     // 指示灯亮，表明已读取
     gpio_set_level(LED1, 0);                                                 
-    gpio_set_level(LED2, 0);
     system_delay_ms(500);
     gpio_set_level(LED1, 1);
-    gpio_set_level(LED2, 1);
 
 
     // 写入 Flash 页面
