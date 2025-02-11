@@ -16,6 +16,7 @@ kalman_param_t Kalman_Offset = {0, 0, 0};       // 零飘参数
 float kalman_Offset_flag = 0;
 volatile float q0, q1, q2, q3, w1, w2, w3;  // 全局四元数
 float angle[3] = {0};
+float A[49], B[49], E[42], FF[36], X[49], Z[49], Ht[42], Ft[49], K[42], O[49], T[6], F[49], Y[7], P1[49], U1[36], U1t[36], DD[36], X1[36], X2[36];
 
 float P[49] = {0.0001, 0, 0, 0, 0, 0, 0,
                0, 0.0001, 0, 0, 0, 0, 0,
@@ -33,21 +34,19 @@ float Q[49] = {0.0001, 0, 0, 0, 0, 0, 0,
                0, 0, 0, 0, 0, 0.0005, 0,
                0, 0, 0, 0, 0, 0, 0.0005};
 
-float R[36] = {0.0003, 0, 0, 0, 0, 0,
-               0, 0.0003, 0, 0, 0, 0,
-               0, 0, 0.0003, 0, 0, 0,
-               0, 0, 0, 0.0002, 0, 0,
-               0, 0, 0, 0, 0.0002, 0,
-               0, 0, 0, 0, 0, 0.0002};
+float R[36] = {0.003, 0, 0, 0, 0, 0,
+               0, 0.003, 0, 0, 0, 0,
+               0, 0, 0.003, 0, 0, 0,
+               0, 0, 0, 0.005, 0, 0,
+               0, 0, 0, 0, 0.005, 0,
+               0, 0, 0, 0, 0, 0.005};
 
-float A[49], B[49], E[42], FF[36], X[49], Z[49], Ht[42], Ft[49], K[42], O[49], T[6], F[49], Y[7], P1[49], U1[36], U1t[36], DD[36], X1[36], X2[36];
-float H[42] = {
-    0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0};
+float H[42] = {0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0};
 
 float I[49] = {1, 0, 0, 0, 0, 0, 0,
                0, 1, 0, 0, 0, 0, 0,
@@ -90,9 +89,9 @@ void AHRS_init()
     // w1 = Gyro_Offset.Xdata; // 0.095f;
     // w2 = Gyro_Offset.Ydata; // 0.078f;
     // w3 = Gyro_Offset.Zdata; // -0.014f;
-    w1 = Gyro_Offset.Xdata;
-    w2 = Gyro_Offset.Ydata;
-    w3 = Gyro_Offset.Zdata;
+    w1 = 0;
+    w2 = 0;
+    w3 = 0;
 
     q0 = 1.0;
     q1 = 0;
@@ -105,7 +104,7 @@ void AHRS_AHRSupdate(float gx, float gy, float gz, float ax, float ay, float az,
     float norm;
     float bx, bz;
     float vx, vy, vz, wx, wy, wz;
-    float g = 9.79973;
+    float g = 9.7817;
     float Ha1, Ha2, Ha3, Ha4, Hb1, Hb2, Hb3, Hb4;
     float e1, e2, e3, e4, e5, e6;
     float halfT;
@@ -304,7 +303,6 @@ void AHRS_AHRSupdate(float gx, float gy, float gz, float ax, float ay, float az,
 ****************************************************************************************************/
 void AHRS_getQ(float * q)
 {
-    // IMU_getValues(mygetqval);
     AHRS_AHRSupdate(ANGLE_TO_RAD(imu963ra_gyro_transition(imu963ra_gyro_x)),
                     ANGLE_TO_RAD(imu963ra_gyro_transition(imu963ra_gyro_y)),
                     ANGLE_TO_RAD(imu963ra_gyro_transition(imu963ra_gyro_z)),
@@ -335,9 +333,9 @@ void AHRS_getYawPitchRoll(float * angles)
 
     float q[4];             // 四元数
     AHRS_getQ(q);           // 更新全局四元数
-     angles[0] = atan2(2 * q[0] * q[1] + 2 * q[2] * q[3], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1) * 180 / PI;// 横滚角roll
-     angles[1] = asin( 2 * q[0] * q[2] - 2 * q[1] * q[3]) * 180 / PI;                                        // 俯仰角pitch
-     angles[2] = atan2(2 * q[0] * q[3] + 2 * q[1] * q[2], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) * 180 / PI;// 偏航角yaw
+    angles[0] = atan2(2 * q[0] * q[1] + 2 * q[2] * q[3], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1) * 180 / PI;// 横滚角roll
+    angles[1] = asin( 2 * q[0] * q[2] - 2 * q[1] * q[3]) * 180 / PI;                                        // 俯仰角pitch
+    angles[2] = atan2(2 * q[0] * q[3] + 2 * q[1] * q[2], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) * 180 / PI;// 偏航角yaw
 
      if(angle[2] < 0)
      {

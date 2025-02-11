@@ -53,10 +53,10 @@ IFX_INTERRUPT(cc60_pit_ch0_isr, CCU6_0_CH0_INT_VECTAB_NUM, CCU6_0_CH0_ISR_PRIORI
     // {
     //     Kalman_Offset_Init();
     // }
-    // if(gyro_Offset_flag == 1)
-    // {
-    //     IMU_YAW_integral();  //积分出角度值
-    // }
+     if(gyro_Offset_flag == 1)
+     {
+         IMU_YAW_integral();  //积分出角度值
+     }
 
 
 
@@ -79,7 +79,7 @@ IFX_INTERRUPT(cc60_pit_ch1_isr, CCU6_0_CH1_INT_VECTAB_NUM, CCU6_0_CH1_ISR_PRIORI
     }
 
     // Get_Gps_Yaw();
-    Point_Switch();
+    // Point_Switch();
     Encoder_Get();                                  // 获取编码器数据
 
 

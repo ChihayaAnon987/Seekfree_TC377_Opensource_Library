@@ -244,19 +244,15 @@ void CaiDian_menu(void)
         Distance = get_two_points_distance (gnss.latitude, gnss.longitude, lat_union[Point_NUM - 1].double_type, lon_union[Point_NUM - 1].double_type);
         ips200_show_string(0, 16 * 6, "Distance:");
         ips200_show_float(96, 16 * 6, Distance, 4, 6);
+
+        seekfree_assistant_oscilloscope_send(&oscilloscope_data);
+        oscilloscope_data.data[0] = Distance;
     }
-
-
-//    ips200_show_uint(  100, 16*3, TeDian[0], 3);          //特殊点位存储显示
-//    ips200_show_uint(  100, 16*4, TeDian[1], 3);
-//    ips200_show_uint(  100, 16*5, TeDian[2], 3);
-//    ips200_show_uint(  100, 16*6, TeDian[3], 3);          //特殊点位存储显示
-//    ips200_show_uint(  100, 16*7, TeDian[4], 3);
-//    ips200_show_uint(  100, 16*8, TeDian[5], 3);
-//    ips200_show_uint(  100, 16*9, TeDian[6], 3);          //特殊点位存储显示
-//    ips200_show_uint(  100, 16*10, TeDian[7], 3);
-//    ips200_show_uint(  100, 16*5, TeDian[8], 3);
-
+    ips200_show_string(  0, 16 *  7, "KEY1:Get  Point");
+    ips200_show_string(  0, 16 *  8, "KEY2:Save Point");
+    ips200_show_string(  0, 16 *  9, "KEY3:Point+1");
+    ips200_show_string(  0, 16 * 10, "KEY4:Point-1");
+    
 }
 
 void ServoPID(void)
@@ -307,6 +303,11 @@ void GPS_menu(void)
     ips200_show_float ( 72, 16 * 6, Gps_Yaw2       , 4, 6);
     ips200_show_float ( 72, 16 * 7, Yaw            , 4, 6);
     ips200_show_float ( 48, 16 * 8, Angle          , 4, 6);
+
+   seekfree_assistant_oscilloscope_send(&oscilloscope_data);
+   oscilloscope_data.data[0] = gnss.latitude;
+   oscilloscope_data.data[1] = gnss.longitude;
+   oscilloscope_data.data[2] = Angle;
 }
 
 void spd_menu(void)
@@ -398,28 +399,30 @@ void Points_menu(void)
 
     int Page = Point / Page_Point_Num;
     int RightArrow = Point % Page_Point_Num + 1;
-    ips200_show_string(0, 16 * RightArrow, "->");
-    for(int i = 1; i <= Page_Point_Num; i++)
+    if(Point_NUM > 0)
     {
-        ips200_show_float ( 16, 16 * i, GPS_GET_LAT[i - 1 + Page * Page_Point_Num], 3, 6);
-        ips200_show_float (136, 16 * i, GPS_GET_LOT[i - 1 + Page * Page_Point_Num], 3, 6);
-        if(i  + Page * 10 == Point_NUM)
+        ips200_show_string(0, 16 * RightArrow, "->");
+        for(int i = 1; i <= Page_Point_Num; i++)
         {
-            break;
+            ips200_show_float ( 16, 16 * i, GPS_GET_LAT[i - 1 + Page * Page_Point_Num], 3, 6);
+            ips200_show_float (128, 16 * i, GPS_GET_LOT[i - 1 + Page * Page_Point_Num], 3, 6);
+            if(i  + Page * 10 == Point_NUM)
+            {
+                break;
+            }
         }
     }
-
     ips200_show_string(  0, 16 *  9, "1:Point-1/Lat+");
     ips200_show_string(  0, 16 * 10, "2:Point+1/Lat-");
     ips200_show_string(120, 16 *  9, "3:Save   /Lot+");
     ips200_show_string(120, 16 * 10, "4:Print  /Lot-");
 
-    double Direction = get_two_points_azimuth(GPS_GET_LAT[0], GPS_GET_LOT[0], GPS_GET_LAT[1], GPS_GET_LOT[1]);
-    double Distance = get_two_points_distance(GPS_GET_LAT[0], GPS_GET_LOT[0], GPS_GET_LAT[1], GPS_GET_LOT[1]);
-    ips200_show_string(0, 16 * 4, "Direction:");
-    ips200_show_string(0, 16 * 5, "Distance:");
-    ips200_show_float(96, 16 * 4, Direction, 3, 3);
-    ips200_show_float(96, 16 * 5, Distance , 5, 6);
+    // double Direction = get_two_points_azimuth(GPS_GET_LAT[0], GPS_GET_LOT[0], GPS_GET_LAT[1], GPS_GET_LOT[1]);
+    // double Distance = get_two_points_distance(GPS_GET_LAT[0], GPS_GET_LOT[0], GPS_GET_LAT[1], GPS_GET_LOT[1]);
+    // ips200_show_string(0, 16 * 4, "Direction:");
+    // ips200_show_string(0, 16 * 5, "Distance:");
+    // ips200_show_float(96, 16 * 4, Direction, 3, 3);
+    // ips200_show_float(96, 16 * 5, Distance , 5, 6);
 
 
 }
@@ -590,6 +593,7 @@ void MotorP_menu(void)
     seekfree_assistant_oscilloscope_send(&oscilloscope_data);
     oscilloscope_data.data[0] = PID_MOTOR.output;
     oscilloscope_data.data[1] = Encoder;
+    oscilloscope_data.data[2] = Test_Duty;
 }
 
 void MotorI_menu(void)
@@ -616,6 +620,7 @@ void MotorI_menu(void)
     seekfree_assistant_oscilloscope_send(&oscilloscope_data);
     oscilloscope_data.data[0] = PID_MOTOR.output;
     oscilloscope_data.data[1] = Encoder;
+    oscilloscope_data.data[2] = Test_Duty;
 }
 
 
@@ -643,6 +648,7 @@ void MotorD_menu(void)
     seekfree_assistant_oscilloscope_send(&oscilloscope_data);
     oscilloscope_data.data[0] = PID_MOTOR.output;
     oscilloscope_data.data[1] = Encoder;
+    oscilloscope_data.data[2] = Test_Duty;
 }
 
 void ZongZuanF(void)
@@ -761,13 +767,19 @@ void Key_Ctrl_Menu()
             }
             if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
             {
-                Test_Duty += 1000;
-                PIDIncMotorCtrl(Test_Duty);
+                if(Test_Duty < PWM_DUTY_MAX)
+                {
+                    Test_Duty += 1000;
+                    PIDIncMotorCtrl(Test_Duty);
+                }
             }
             if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
             {
-                Test_Duty -= 1000;
-                PIDIncMotorCtrl(Test_Duty);
+                if(Test_Duty > 0)
+                {
+                    Test_Duty -= 1000;
+                    PIDIncMotorCtrl(Test_Duty);
+                }
             }
         }
 
@@ -784,13 +796,19 @@ void Key_Ctrl_Menu()
             }
             if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
             {
-                Test_Duty += 1000;
-                PIDIncMotorCtrl(Test_Duty);
+                if(Test_Duty < PWM_DUTY_MAX)
+                {
+                    Test_Duty += 1000;
+                    PIDIncMotorCtrl(Test_Duty);
+                }
             }
             if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
             {
-                Test_Duty -= 1000;
-                PIDIncMotorCtrl(Test_Duty);
+                if(Test_Duty > 0)
+                {
+                    Test_Duty -= 1000;
+                    PIDIncMotorCtrl(Test_Duty);
+                }
             }
         }
 
@@ -807,13 +825,19 @@ void Key_Ctrl_Menu()
             }
             if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
             {
-                Test_Duty += 1000;
-                PIDIncMotorCtrl(Test_Duty);
+                if(Test_Duty < PWM_DUTY_MAX)
+                {
+                    Test_Duty += 1000;
+                    PIDIncMotorCtrl(Test_Duty);
+                }
             }
             if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
             {
-                Test_Duty -= 1000;
-                PIDIncMotorCtrl(Test_Duty);
+                if(Test_Duty > 0)
+                {
+                    Test_Duty -= 1000;
+                    PIDIncMotorCtrl(Test_Duty);
+                }
             }
         }
 
@@ -877,18 +901,24 @@ void Key_Ctrl_Menu()
             {
                 if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
                 {
-                    if(Point > 0)
+                    if(Point_NUM > 0)
                     {
-                        Point = Point - 1;
-                        ips200_clear();
+                        if(Point > 0)
+                        {
+                            Point = Point - 1;
+                            ips200_clear();
+                        }
                     }
                 }
                 if(key_get_state(KEY_2) == KEY_SHORT_PRESS)
                 {
-                    if(Point < Point_NUM - 1)
+                    if(Point_NUM > 0)
                     {
-                        Point = Point + 1;
-                        ips200_clear();
+                        if(Point < Point_NUM - 1)
+                        {
+                            Point = Point + 1;
+                            ips200_clear();
+                        }
                     }
                 }
                 if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
