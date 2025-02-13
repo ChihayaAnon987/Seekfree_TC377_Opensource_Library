@@ -8,38 +8,34 @@
 #include "zf_common_headfile.h"
 
 
-int Track_Points_NUM  =   1;       // 当前追踪第几个点
+int Track_Points_NUM  =   0;       // 当前追踪第几个点
 double Angle_Error    =   0;       // 方向角与航向角之差
 float  Fusion_angle   =   0;       // GPS和IMU互补滤波后的角度
 float  Fusion_alpha   = 0.9;       // GPS和IMU互补滤波的权重
-int16  Target_Duty    =   0;       // 占空比
+int16  Target_Encoder =   0;       // 转速
 
 void Stright_Some_Distance()
 {
     double distance = 0;
-    if(gnss_flag)
-    {
-        gnss_flag = 0;
-        gnss_data_parse();           //开始解析数据
-        Start_Lat = gnss.latitude;
-        Start_Lon = gnss.longitude;
-    }
-    Servo_Set(SERVO_MOTOR_MID);
-    Target_Duty = 3000;
+
+    Start_Lat = gnss.latitude;
+    Start_Lon = gnss.longitude;
+
+    Delta_Lat = Start_Lat - GPS_GET_LAT[0];
+    Delta_Lon = Start_Lon - GPS_GET_LOT[0];
+
+    // Servo_Set(SERVO_MOTOR_MID);
+    Angle_Error = 0;
+    Target_Encoder = 200;
     while(distance < 10)
     {
         distance = get_two_points_distance(Start_Lat, Start_Lon, gnss.latitude, gnss.longitude);
     }
-    if(gnss_flag)
-    {
-        gnss_flag = 0;
-        gnss_data_parse();           //开始解析数据
-        Straight_Lat = gnss.latitude;
-        Straight_Lon = gnss.longitude;
-    }
-    Delta_Lat = Start_Lat - GPS_GET_LAT[0];
-    Delta_Lon = Start_Lon - GPS_GET_LOT[0];
+
+    Straight_Lat = gnss.latitude;
+    Straight_Lon = gnss.longitude;
     Delta_Angle = get_two_points_azimuth(Start_Lat, Start_Lon, Straight_Lat, Straight_Lon);
+    Track_Points_NUM = 1;
 }
 
 /****************************************************************************************************
@@ -108,10 +104,33 @@ void Track_Follow()
     // 4.加入电机PID控制
     // 5.MPC控制和曲率前馈
     // 1234均已实现的差不多，等待实际测试
-    
-    if(Track_Points_NUM == 1 || Track_Points_NUM == 2)
+
+    // 关于科目一二三的切换，可以借助菜单实现，把Servo_Test换成Task_Select或者新增一个一级菜单都是可以的
+    // KEY1、KEY2、KEY3分别对应科目一、科目二、科目三（预设充足的点位给某个科目，按下按键跳转到某科目对应的点位）
+    // KEY4发车（设置一个标志位，KEY4按下置为高电平，退出在主程序的一个卡死的while循环，进入循迹循环）
+    // 思路大概如此，实现也很简单，但是先算了，把科目一跑完再实现这个逻辑
+
+    switch(Track_Points_NUM)
     {
-        Target_Duty = 3000;
+        case 0:
+            Stright_Some_Distance();
+            break;
+        case 1:
+            Target_Encoder = 200; 
+            break;
+        case 2:
+            Target_Encoder = 200; 
+            break;
+        case 3:
+            Target_Encoder = 200; 
+            break;
+        case 4:
+            Target_Encoder = 200; 
+            break;
+
+        case 10:
+            break;
+
     }
 
 
@@ -121,19 +140,45 @@ void Track_Follow()
 // 切换点位
 void Point_Switch()
 {
-    if(Track_Points_NUM == 0) // 当前点位
+
+    switch(Track_Points_NUM)
     {
-        if(Distance < 2)
-        {
-            Track_Points_NUM++;   // 切换下一点位
-        }
-    }
-    else if(Track_Points_NUM == 1 || Track_Points_NUM == 2 || Track_Points_NUM == 3) // 当前点位
-    {
-        if(Distance < 1)   // 特殊任务，适用于距离把握更精确的情境
-        {
-            Track_Points_NUM++;
-        }
+        // 暂时假定科目一采5个点，其中下标0是发车点
+        case 0:
+            break;
+        case 1:
+            if(Distance < 2)
+            {
+                Track_Points_NUM = 2;
+                LED_Buzzer_Flag_Ctrl(BUZZER_PIN);
+            }
+            break;
+        case 2:
+            if(Distance < 2)
+            {
+                Track_Points_NUM = 3;
+                LED_Buzzer_Flag_Ctrl(BUZZER_PIN);
+            }
+            break;
+        case 3:
+            if(Distance < 2)
+            {
+                Track_Points_NUM = 4;
+                LED_Buzzer_Flag_Ctrl(BUZZER_PIN);
+            }
+            break;
+        case 4:
+            if(Distance < 2)
+            {
+                Track_Points_NUM = 5;
+                LED_Buzzer_Flag_Ctrl(BUZZER_PIN);
+            }
+            break;
+
+        // 科目二设置为GPS循迹，纯惯导虽然稳定，但是速度慢，实现难，暂时不考虑
+
+        // 科目三桥洞标准方案是通过GPS导航到桥洞附近，再通过摄像头识别桥洞中间白色PCV材料。
+        // 
     }
 
 }

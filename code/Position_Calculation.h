@@ -19,7 +19,7 @@ extern int    Track_Points_NUM;                                // 当前追踪第几个
 extern double Angle_Error;                                     // 角度误差
 extern float  Fusion_angle;                                    // GPS和IMU互补滤波后的角度
 extern float  Fusion_alpha;                                    // GPS和IMU互补滤波的权重
-extern int16  Target_Duty;                                     // 占空比
+extern int16  Target_Encoder;                                  // 转速
 //===================================================全局变量END===================================================
 
 

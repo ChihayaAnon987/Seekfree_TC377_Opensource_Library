@@ -55,7 +55,7 @@ void core2_main(void)
     while (TRUE)
     {
         // 此处编写需要循环执行的代码
-
+        LED_Buzzer_Ctrl();
 
 
 

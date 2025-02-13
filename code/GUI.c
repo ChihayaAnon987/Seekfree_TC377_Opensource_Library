@@ -20,7 +20,7 @@ int    func_index   = 0;
 int    key_value;
 int    Point        = 0;    // 菜单点位
 double Test_Angle   = 0;    // 调试用
-int16  Test_Duty    = 0;    // 调试用
+int16  Test_Encoder = 0;    // 调试用
 seekfree_assistant_oscilloscope_struct oscilloscope_data;
 
 
@@ -574,7 +574,7 @@ void MotorP_menu(void)
     ips200_show_string(  0, 16 * 0, "-->MotorP:");
     ips200_show_string(  0, 16 * 1, "   MotorI:");
     ips200_show_string(  0, 16 * 2, "   MotorD:");
-    ips200_show_string(  0, 16 * 3, "Test_Duty:");
+    ips200_show_string(  0, 16 * 3, "Test_Encoder:");
     ips200_show_string(  0, 16 * 4, "Encoder:");
     ips200_show_string(  0, 16 * 5, "PID.error:");
     ips200_show_string(  0, 16 * 6, "PID.output:");
@@ -585,7 +585,7 @@ void MotorP_menu(void)
     ips200_show_float ( 80, 16 * 0,Parameter_set0.SpeedPID[0], 2, 3);
     ips200_show_float ( 80, 16 * 1,Parameter_set0.SpeedPID[1], 2, 3);
     ips200_show_float ( 80, 16 * 2,Parameter_set0.SpeedPID[2], 2, 3);
-    ips200_show_uint  ( 80, 16 * 3, Test_Duty, 5);
+    ips200_show_uint  (104, 16 * 3, Test_Encoder, 5);
     ips200_show_int   ( 64, 16 * 4, Encoder, 5);
     ips200_show_float ( 80, 16 * 5, PID_MOTOR.current_error, 3, 3);
     ips200_show_float ( 88, 16 * 6, PID_MOTOR.output, 3, 6);
@@ -593,7 +593,7 @@ void MotorP_menu(void)
     seekfree_assistant_oscilloscope_send(&oscilloscope_data);
     oscilloscope_data.data[0] = PID_MOTOR.output;
     oscilloscope_data.data[1] = Encoder;
-    oscilloscope_data.data[2] = Test_Duty;
+    oscilloscope_data.data[2] = Test_Encoder;
 }
 
 void MotorI_menu(void)
@@ -601,7 +601,7 @@ void MotorI_menu(void)
     ips200_show_string(  0, 16 * 0, "   MotorP:");
     ips200_show_string(  0, 16 * 1, "-->MotorI:");
     ips200_show_string(  0, 16 * 2, "   MotorD:");
-    ips200_show_string(  0, 16 * 3, "Test_Duty:");
+    ips200_show_string(  0, 16 * 3, "Test_Encoder:");
     ips200_show_string(  0, 16 * 4, "Encoder:");
     ips200_show_string(  0, 16 * 5, "PID.error:");
     ips200_show_string(  0, 16 * 6, "PID.output:");
@@ -612,7 +612,7 @@ void MotorI_menu(void)
     ips200_show_float ( 80, 16 * 0,Parameter_set0.SpeedPID[0], 2, 3);
     ips200_show_float ( 80, 16 * 1,Parameter_set0.SpeedPID[1], 2, 3);
     ips200_show_float ( 80, 16 * 2,Parameter_set0.SpeedPID[2], 2, 3);
-    ips200_show_uint  ( 80, 16 * 3, Test_Duty, 5);
+    ips200_show_uint  (104, 16 * 3, Test_Encoder, 5);
     ips200_show_int   ( 64, 16 * 4, Encoder, 5);
     ips200_show_float ( 80, 16 * 5, PID_MOTOR.current_error, 3, 3);
     ips200_show_float ( 88, 16 * 6, PID_MOTOR.output, 3, 6);
@@ -620,7 +620,7 @@ void MotorI_menu(void)
     seekfree_assistant_oscilloscope_send(&oscilloscope_data);
     oscilloscope_data.data[0] = PID_MOTOR.output;
     oscilloscope_data.data[1] = Encoder;
-    oscilloscope_data.data[2] = Test_Duty;
+    oscilloscope_data.data[2] = Test_Encoder;
 }
 
 
@@ -629,7 +629,7 @@ void MotorD_menu(void)
     ips200_show_string(  0, 16 * 0, "   MotorP:");
     ips200_show_string(  0, 16 * 1, "   MotorI:");
     ips200_show_string(  0, 16 * 2, "-->MotorD:");
-    ips200_show_string(  0, 16 * 3, "Test_Duty:");
+    ips200_show_string(  0, 16 * 3, "Test_Encoder:");
     ips200_show_string(  0, 16 * 4, "Encoder:");
     ips200_show_string(  0, 16 * 5, "PID.error:");
     ips200_show_string(  0, 16 * 6, "PID.output:");
@@ -640,7 +640,7 @@ void MotorD_menu(void)
     ips200_show_float ( 80, 16 * 0,Parameter_set0.SpeedPID[0], 2, 3);
     ips200_show_float ( 80, 16 * 1,Parameter_set0.SpeedPID[1], 2, 3);
     ips200_show_float ( 80, 16 * 2,Parameter_set0.SpeedPID[2], 2, 3);
-    ips200_show_uint  ( 80, 16 * 3, Test_Duty, 5);
+    ips200_show_uint  (104, 16 * 3, Test_Encoder, 5);
     ips200_show_int   ( 64, 16 * 4, Encoder, 5);
     ips200_show_float ( 80, 16 * 5, PID_MOTOR.current_error, 3, 3);
     ips200_show_float ( 88, 16 * 6, PID_MOTOR.output, 3, 6);
@@ -648,17 +648,16 @@ void MotorD_menu(void)
     seekfree_assistant_oscilloscope_send(&oscilloscope_data);
     oscilloscope_data.data[0] = PID_MOTOR.output;
     oscilloscope_data.data[1] = Encoder;
-    oscilloscope_data.data[2] = Test_Duty;
+    oscilloscope_data.data[2] = Test_Encoder;
 }
 
 void ZongZuanF(void)
 {
-//    if(mt9v03x_finish_flag)
-//    {
-//        ips200_displayimage03x(mt9v03x_image[0], MT9V03X_W, MT9V03X_H);
-//        mt9v03x_finish_flag = 0;
-//    }
-//    ips200_show_rgb565_image(0, 184, (const uint16 *)my_picture, 240, 135, 240, 135, 0);    // 显示一个RGB565色彩图片 原图240*80 显示240*80 低位在前
+   if(mt9v03x_finish_flag)
+   {
+        ips200_displayimage03x(mt9v03x_image[0], MT9V03X_W, MT9V03X_H);
+        mt9v03x_finish_flag = 0;
+   }
 }
 
 void Key_Ctrl_Menu()
@@ -767,18 +766,18 @@ void Key_Ctrl_Menu()
             }
             if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
             {
-                if(Test_Duty < PWM_DUTY_MAX)
+                if(Test_Encoder < PWM_DUTY_MAX)
                 {
-                    Test_Duty += 1000;
-                    PIDIncMotorCtrl(Test_Duty);
+                    Test_Encoder += 1000;
+                    PIDIncMotorCtrl(Test_Encoder);
                 }
             }
             if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
             {
-                if(Test_Duty > 0)
+                if(Test_Encoder > -PWM_DUTY_MAX)
                 {
-                    Test_Duty -= 1000;
-                    PIDIncMotorCtrl(Test_Duty);
+                    Test_Encoder -= 1000;
+                    PIDIncMotorCtrl(Test_Encoder);
                 }
             }
         }
@@ -796,18 +795,18 @@ void Key_Ctrl_Menu()
             }
             if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
             {
-                if(Test_Duty < PWM_DUTY_MAX)
+                if(Test_Encoder < PWM_DUTY_MAX)
                 {
-                    Test_Duty += 1000;
-                    PIDIncMotorCtrl(Test_Duty);
+                    Test_Encoder += 1000;
+                    PIDIncMotorCtrl(Test_Encoder);
                 }
             }
             if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
             {
-                if(Test_Duty > 0)
+                if(Test_Encoder > -PWM_DUTY_MAX)
                 {
-                    Test_Duty -= 1000;
-                    PIDIncMotorCtrl(Test_Duty);
+                    Test_Encoder -= 1000;
+                    PIDIncMotorCtrl(Test_Encoder);
                 }
             }
         }
@@ -825,18 +824,18 @@ void Key_Ctrl_Menu()
             }
             if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
             {
-                if(Test_Duty < PWM_DUTY_MAX)
+                if(Test_Encoder < PWM_DUTY_MAX)
                 {
-                    Test_Duty += 1000;
-                    PIDIncMotorCtrl(Test_Duty);
+                    Test_Encoder += 1000;
+                    PIDIncMotorCtrl(Test_Encoder);
                 }
             }
             if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
             {
-                if(Test_Duty > 0)
+                if(Test_Encoder > -PWM_DUTY_MAX)
                 {
-                    Test_Duty -= 1000;
-                    PIDIncMotorCtrl(Test_Duty);
+                    Test_Encoder -= 1000;
+                    PIDIncMotorCtrl(Test_Encoder);
                 }
             }
         }

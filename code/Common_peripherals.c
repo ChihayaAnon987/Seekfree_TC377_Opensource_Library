@@ -6,9 +6,10 @@
  */
 #include "zf_common_headfile.h"
 
-int16 Servo_Angle = SERVO_MOTOR_MID;
+int16 Servo_Angle     = SERVO_MOTOR_MID;
 int16 Encoder;
-float System_Time = 0;
+float System_Time     = 0;
+uint8 LED_Buzzer_Flag = 0;
 void CPU0_Init()
 {
     AHRS_init();                                                    // AHRS初始化
@@ -29,7 +30,7 @@ void CPU1_Init()
     Buzzer_Init();                                                  // 蜂鸣器初始化
 //    uart_receiver_init();                                           // sbus接收机初始化
     KEY_Init();                                                     // 按键初始化
-    //mt9v03x_init();                                                 // 总钻风初始化
+    mt9v03x_init();                                                 // 总钻风初始化
     key_init(10);                                                   // 按键初始化
     ips200_init(IPS200_TYPE);                                       // 屏幕初始化
     Buzzer_Check(200);                                              // 自检，表示初始化成功
@@ -145,3 +146,28 @@ void System_Time_Count()
     System_Time += 0.005;
 }
 
+void LED_Buzzer_Flag_Ctrl(gpio_pin_enum pin)
+{
+    switch(pin)
+    {
+        case LED1      : LED_Buzzer_Flag = 1; break;
+        case LED2      : LED_Buzzer_Flag = 2; break;
+        case LED3      : LED_Buzzer_Flag = 3; break;
+        case LED4      : LED_Buzzer_Flag = 4; break;
+        case BUZZER_PIN: LED_Buzzer_Flag = 5; break;
+        default: break;
+    }
+}
+
+void LED_Buzzer_Ctrl()
+{
+    switch (LED_Buzzer_Flag)
+    {
+        case 1: gpio_set_level(LED1, 0); system_delay_ms(500); gpio_set_level(LED1, 1); LED_Buzzer_Flag = 0; break;
+        case 2: gpio_set_level(LED2, 0); system_delay_ms(500); gpio_set_level(LED2, 1); LED_Buzzer_Flag = 0; break;
+        case 3: gpio_set_level(LED3, 0); system_delay_ms(500); gpio_set_level(LED3, 1); LED_Buzzer_Flag = 0; break;
+        case 4: gpio_set_level(LED4, 0); system_delay_ms(500); gpio_set_level(LED4, 1); LED_Buzzer_Flag = 0; break;
+        case 5: Buzzer_Check(500); LED_Buzzer_Flag = 0; break;
+        default: break;
+    }
+}

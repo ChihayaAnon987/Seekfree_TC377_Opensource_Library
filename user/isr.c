@@ -75,7 +75,7 @@ IFX_INTERRUPT(cc60_pit_ch1_isr, CCU6_0_CH1_INT_VECTAB_NUM, CCU6_0_CH1_ISR_PRIORI
     if(Control_Flag == 0)
     {
         PDLocServoCtrl();                           // 舵机 PD位置式控制
-        PIDIncMotorCtrl(Target_Duty);               // 电机 PID增量式控制
+        PIDIncMotorCtrl(Target_Encoder);               // 电机 PID增量式控制
     }
 
     // Get_Gps_Yaw();

@@ -138,16 +138,16 @@ void PDLocServoCtrl()
 
 /****************************************************************************************************
 //  @brief      电机 PID增量式控制器
-//  @param      TARGET_MOTOR_DUTY      目标电机占空比
+//  @param      TARGET_MOTOR_ENCODER      目标电机转速
 //  @return     void
 //  @since
 //  Sample usage:PIDIncMotorCtrl(3000);
 ****************************************************************************************************/
-void PIDIncMotorCtrl(int16 TARGET_MOTOR_DUTY)
+void PIDIncMotorCtrl(int16 TARGET_MOTOR_ENCODER)
 {
     PID_MOTOR.lastlast_error = PID_MOTOR.last_error;
     PID_MOTOR.last_error     = PID_MOTOR.current_error;
-    PID_MOTOR.current_error  = TARGET_MOTOR_DUTY - Encoder;
+    PID_MOTOR.current_error  = TARGET_MOTOR_ENCODER - Encoder;
 
     PID_MOTOR.output += Parameter_set0.SpeedPID[0] * (PID_MOTOR.current_error - PID_MOTOR.last_error) +
                         Parameter_set0.SpeedPID[1] * PID_MOTOR.current_error +

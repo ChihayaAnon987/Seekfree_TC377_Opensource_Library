@@ -40,7 +40,7 @@ typedef struct
 extern Parameter_set Parameter_set0;                            // 参数集合
 extern seekfree_assistant_oscilloscope_struct oscilloscope_data;// 初始化逐飞助手示波器的结构体
 extern double Test_Angle;                                       // 调试用
-extern int16  Test_Duty;                                        // 调试用
+extern int16  Test_Encoder;                                        // 调试用
 //===================================================全局变量END===================================================
 
 

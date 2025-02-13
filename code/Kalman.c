@@ -104,7 +104,7 @@ void AHRS_AHRSupdate(float gx, float gy, float gz, float ax, float ay, float az,
     float norm;
     float bx, bz;
     float vx, vy, vz, wx, wy, wz;
-    float g = 9.7817;
+    float g = 9.78784;
     float Ha1, Ha2, Ha3, Ha4, Hb1, Hb2, Hb3, Hb4;
     float e1, e2, e3, e4, e5, e6;
     float halfT;
