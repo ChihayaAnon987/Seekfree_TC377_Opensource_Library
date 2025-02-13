@@ -837,7 +837,7 @@ void Key_Ctrl_Menu()
                     Test_Encoder -= 1000;
                     PIDIncMotorCtrl(Test_Encoder);
                 }
-            }
+            } 
         }
 
         if(func_index == 12)
