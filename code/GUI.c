@@ -21,15 +21,16 @@ int    key_value;
 int    Point        = 0;    // 菜单点位
 double Test_Angle   = 0;    // 调试用
 int16  Test_Encoder = 0;    // 调试用
+uint8  Start_Flag   = 0;    // 发车标志
 seekfree_assistant_oscilloscope_struct oscilloscope_data;
 
 
-menu_table table[30]=
+menu_table table[31]=
 {
     // current, up, down, back, enter
 
     // 菜单0
-    { 0, 27,  2,  0,  1, main_menu0},       // 踩点GPS一层
+    { 0, 29,  2,  0,  1, main_menu0},       // 踩点GPS一层
     { 1,  1,  1,  0,  1, CaiDian_menu},     // 踩点GPS二层
 
     // 菜单1
@@ -74,10 +75,12 @@ menu_table table[30]=
     {26, 26, 26, 25, 26, Flash_menu},        // Flash二层
 
     // 菜单9
-    {27, 25,  0, 27, 28, main_menu9},        // 舵机测试一层
-    {28, 28, 28, 27, 28, Servo_menu}         // 舵机测试二层
+    {27, 25, 29, 27, 28, main_menu9},        // 舵机测试一层
+    {28, 28, 28, 27, 28, Servo_menu},        // 舵机测试二层
 
-
+    // 菜单10
+    {29, 27,  0, 29, 30, main_menu10},       // 任务选择一层
+    {30, 30, 30, 29, 30, Task_Select}        // 任务选择二层
 
 };
 
@@ -94,6 +97,7 @@ void main_menu0(void)
     ips200_show_string(  0, 16 * 7, "   Imu963    ");
     ips200_show_string(110, 16 * 0, "   Flash     ");
     ips200_show_string(110, 16 * 1, "   SevroTest ");
+    ips200_show_string(110, 16 * 2, "   TaskSelect");
 }
 
 void main_menu1(void)
@@ -108,6 +112,7 @@ void main_menu1(void)
     ips200_show_string(  0, 16 * 7, "   Imu963    ");
     ips200_show_string(110, 16 * 0, "   Flash     ");
     ips200_show_string(110, 16 * 1, "   SevroTest ");
+    ips200_show_string(110, 16 * 2, "   TaskSelect");
 }
 
 void main_menu2(void)
@@ -122,6 +127,7 @@ void main_menu2(void)
     ips200_show_string(  0, 16 * 7, "   Imu963    ");
     ips200_show_string(110, 16 * 0, "   Flash     ");
     ips200_show_string(110, 16 * 1, "   SevroTest ");
+    ips200_show_string(110, 16 * 2, "   TaskSelect");
 }
 
 void main_menu3(void)
@@ -136,6 +142,7 @@ void main_menu3(void)
     ips200_show_string(  0, 16 * 7, "   Imu963    ");
     ips200_show_string(110, 16 * 0, "   Flash     ");
     ips200_show_string(110, 16 * 1, "   SevroTest ");
+    ips200_show_string(110, 16 * 2, "   TaskSelect");
 }
 
 void main_menu4(void)
@@ -150,6 +157,7 @@ void main_menu4(void)
     ips200_show_string(  0, 16 * 7, "   Imu963    ");
     ips200_show_string(110, 16 * 0, "   Flash     ");
     ips200_show_string(110, 16 * 1, "   SevroTest ");
+    ips200_show_string(110, 16 * 2, "   TaskSelect");
 }
 
 void main_menu5(void)
@@ -164,6 +172,7 @@ void main_menu5(void)
     ips200_show_string(  0, 16 * 7, "   Imu963    ");
     ips200_show_string(110, 16 * 0, "   Flash     ");
     ips200_show_string(110, 16 * 1, "   SevroTest ");
+    ips200_show_string(110, 16 * 2, "   TaskSelect");
 }
 
 void main_menu6(void)
@@ -178,6 +187,7 @@ void main_menu6(void)
     ips200_show_string(  0, 16 * 7, "   Imu963    ");
     ips200_show_string(110, 16 * 0, "   Flash     ");
     ips200_show_string(110, 16 * 1, "   SevroTest ");
+    ips200_show_string(110, 16 * 2, "   TaskSelect");
 }
 
 void main_menu7(void)
@@ -192,6 +202,7 @@ void main_menu7(void)
     ips200_show_string(  0, 16 * 7, "-->Imu963    ");
     ips200_show_string(110, 16 * 0, "   Flash     ");
     ips200_show_string(110, 16 * 1, "   SevroTest ");
+    ips200_show_string(110, 16 * 2, "   TaskSelect");
 }
 
 void main_menu8(void)
@@ -206,6 +217,7 @@ void main_menu8(void)
     ips200_show_string(  0, 16 * 7, "   Imu963    ");
     ips200_show_string(110, 16 * 0, "-->Flash     ");
     ips200_show_string(110, 16 * 1, "   SevroTest ");
+    ips200_show_string(110, 16 * 2, "   TaskSelect");
 }
 
 void main_menu9(void)
@@ -220,6 +232,22 @@ void main_menu9(void)
     ips200_show_string(  0, 16 * 7, "   Imu963    ");
     ips200_show_string(110, 16 * 0, "   Flash     ");
     ips200_show_string(110, 16 * 1, "-->SevroTest ");
+    ips200_show_string(110, 16 * 2, "   TaskSelect");
+}
+
+void main_menu10(void)
+{
+    ips200_show_string(  0, 16 * 0, "   CaiDian   ");
+    ips200_show_string(  0, 16 * 1, "   PID       ");
+    ips200_show_string(  0, 16 * 2, "   GPS Show  ");
+    ips200_show_string(  0, 16 * 3, "   Duty      ");
+    ips200_show_string(  0, 16 * 4, "   RemoteCtrl");
+    ips200_show_string(  0, 16 * 5, "   Points    ");
+    ips200_show_string(  0, 16 * 6, "   Camera    ");
+    ips200_show_string(  0, 16 * 7, "   Imu963    ");
+    ips200_show_string(110, 16 * 0, "   Flash     ");
+    ips200_show_string(110, 16 * 1, "   SevroTest ");
+    ips200_show_string(110, 16 * 2, "-->TaskSelect");
 }
 
 /////////////////////////////////二层菜单-------------------------------------------------
@@ -389,7 +417,7 @@ void RemoteCtrl_menu(void)
     ips200_show_int (   80, 16 * 7 , RemoteCtrl_Speed, 4);
 }
 
-void Points_menu(void)
+void  Points_menu(void)
 {
     ips200_show_string( 16, 16 * 0, "Lat:");
     ips200_show_string(128, 16 * 0, "Lon:");
@@ -443,15 +471,15 @@ void Imu963_menu()
     ips200_show_float( 72, 16 * 4, angle[1], 3, 3);
     ips200_show_float( 72, 16 * 5, angle[2], 3, 3);
 
-   seekfree_assistant_oscilloscope_send(&oscilloscope_data);
-   oscilloscope_data.data[0] = IMU_Data.gyro_z;
-   oscilloscope_data.data[1] = MAX_IMU_Data_gyro_z;
-   oscilloscope_data.data[2] = imu963ra_mag_x;
-   oscilloscope_data.data[3] = imu963ra_mag_y;
-   oscilloscope_data.data[4] = imu963ra_mag_z;
-   oscilloscope_data.data[5] = angle[0];
-   oscilloscope_data.data[6] = angle[1];
-   oscilloscope_data.data[7] = angle[2] < 0 ? angle[2] -360 : angle[2];
+    seekfree_assistant_oscilloscope_send(&oscilloscope_data);
+    oscilloscope_data.data[0] = IMU_Data.gyro_z;
+    oscilloscope_data.data[1] = MAX_IMU_Data_gyro_z;
+    oscilloscope_data.data[2] = imu963ra_mag_x;
+    oscilloscope_data.data[3] = imu963ra_mag_y;
+    oscilloscope_data.data[4] = imu963ra_mag_z;
+    oscilloscope_data.data[5] = angle[0];
+    oscilloscope_data.data[6] = angle[1];
+    oscilloscope_data.data[7] = angle[2] < 0 ? angle[2] -360 : angle[2];
     
     system_delay_ms(10);
 }
@@ -464,6 +492,17 @@ void Flash_menu()
     ips200_show_string(  0, 16 * 3, "KEY3:Delete");
     ips200_show_string(  0, 16 * 4, "KEY4:Check");
 
+}
+
+void Task_Select()
+{
+    ips200_show_string(  0, 16 *  0, "Track_Point:");
+    ips200_show_uint(   96, 16 *  0, Track_Points_NUM, 3);
+
+    ips200_show_string(  0, 16 *  9, "KEY1:Task1");
+    ips200_show_string(120, 16 *  9, "KEY2:Task2");
+    ips200_show_string(  0, 16 * 10, "KEY3:Task3");
+    ips200_show_string(120, 16 * 10, "KEY4:Start");
 }
 
 void Servo_menu()
@@ -837,7 +876,7 @@ void Key_Ctrl_Menu()
                     Test_Encoder -= 1000;
                     PIDIncMotorCtrl(Test_Encoder);
                 }
-            } 
+            }
         }
 
         if(func_index == 12)
@@ -1012,6 +1051,27 @@ void Key_Ctrl_Menu()
             {
                 Servo_Angle -= 1;
                 Servo_Set(Servo_Angle);     // 舵机角度控制
+            }
+        }
+
+        if(func_index == 30)
+        {
+            if(key_get_state(KEY_1) == KEY_SHORT_PRESS)
+            {
+                Track_Points_NUM = 0;
+            }
+            if(key_get_state(KEY_2) == KEY_SHORT_PRESS)
+            {
+                Track_Points_NUM = 20;
+            }
+            if(key_get_state(KEY_3) == KEY_SHORT_PRESS)
+            {
+                Track_Points_NUM = 50;
+            }
+            if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
+            {
+                Start_Flag = 1;
+                LED_Buzzer_Flag_Ctrl(LED3);
             }
         }
     }

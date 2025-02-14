@@ -78,8 +78,8 @@ float PidLocCtrl(PIDController *pid, float error);                      // PID位
 float PidIncCtrl(PIDController *pid, float error);                      // PID增量式控制器输出
 void  PdGpsCtrl(void);                                                  // GPS PD控制器
 void  PDLocServoCtrl(void);                                             // 舵机 PD位置式控制器
-void  PIDIncMotorCtrl(int16 TARGET_MOTOR_ENCODER);                         // 电机 PID增量式控制器
-// void PidLocCtrl(PIDController *pid, float measuredVal);                 // PID位置式控制器输出
+void  PIDIncMotorCtrl(int16 TARGET_MOTOR_ENCODER);                      // 电机 PID增量式控制器
+// void PidLocCtrl(PIDConntroller *pid, float measuredVal);                 // PID位置式控制器输出
 // void PidIncCtrl(PIDController *pid, float measuredVal);                 // PID增量式控制器输出
 void move_filter_init(move_filter_struct *move_filter);                 // 滑动平均滤波初始化
 void move_filter_calc(move_filter_struct *move_filter, int32_t new_data); // 滑动平均滤波计算

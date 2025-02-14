@@ -128,9 +128,14 @@ void Track_Follow()
             Target_Encoder = 200; 
             break;
 
-        case 10:
+        case 20:
             break;
 
+        case 50:
+            break;
+        
+        default:
+            break;
     }
 
 

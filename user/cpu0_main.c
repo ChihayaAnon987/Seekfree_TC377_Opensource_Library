@@ -60,6 +60,14 @@ int core0_main(void)
     cpu_wait_event_ready();         // 等待所有核心初始化完毕
     while (TRUE)
     {
+        if(Start_Flag == 1)
+        {
+            break;
+        }
+    }
+    
+    while (TRUE)
+    {
         // 此处编写需要循环执行的代码
         Track_Follow();
         // 此处编写需要循环执行的代码
