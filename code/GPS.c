@@ -93,6 +93,20 @@ void GL_CRC()
             lon_union[Point_NUM].double_type = gnss.longitude;// ÆæÊý´¢´æ¾­¶Èlongitude
             Point_NUM++;
         }
+        Point_NUM = 6;
+        lat_union[0].double_type = 22.590801;
+        lat_union[1].double_type = 22.590741;
+        lat_union[2].double_type = 22.590671;
+        lat_union[3].double_type = 22.590666;
+        lat_union[4].double_type = 22.590737;
+        lat_union[5].double_type = 22.590791;
+
+        lon_union[0].double_type = 113.961823;
+        lon_union[1].double_type = 113.961822;
+        lon_union[2].double_type = 113.961823;
+        lon_union[3].double_type = 113.961864;
+        lon_union[4].double_type = 113.961859;
+        lon_union[5].double_type = 113.961853;
     }
 
     if(key_get_state(KEY_2) == KEY_SHORT_PRESS)
@@ -132,7 +146,7 @@ void Get_Gps()
         FilterPoint_Lat = K_Gps * FilterPoint_Lat + (1 - K_Gps) * gnss.latitude;
         FilterPoint_Lon = K_Gps * FilterPoint_Lon + (1 - K_Gps) * gnss.longitude;
         Angle = get_two_points_azimuth(gnss.latitude, gnss.longitude, GPS_GET_LAT[Track_Points_NUM] - Delta_Lat, GPS_GET_LOT[Track_Points_NUM] - Delta_Lon);
-        Angle -= Delta_Angle;
+        // Angle -= Delta_Angle;
         if(Angle > 180)
         {
             Angle -= 360;

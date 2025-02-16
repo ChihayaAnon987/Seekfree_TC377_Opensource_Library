@@ -10,7 +10,7 @@
 Parameter_set Parameter_set0=
 {
     {2.0, 0.0, 1.0},            // 舵机PID
-    {0.0, 0.0, 0.0},            // 速度PID
+    {1.0, 0.0, 0.0},            // 速度PID
     3000,                       // 调试的速度
     2.5,                        // 换点距离
     SERVO_MOTOR_MID             // 舵机机械可调中值
@@ -479,7 +479,7 @@ void Imu963_menu()
     oscilloscope_data.data[4] = imu963ra_mag_z;
     oscilloscope_data.data[5] = angle[0];
     oscilloscope_data.data[6] = angle[1];
-    oscilloscope_data.data[7] = angle[2] < 0 ? angle[2] -360 : angle[2];
+    oscilloscope_data.data[7] = angle[2];
     
     system_delay_ms(10);
 }
@@ -498,6 +498,20 @@ void Task_Select()
 {
     ips200_show_string(  0, 16 *  0, "Track_Point:");
     ips200_show_uint(   96, 16 *  0, Track_Points_NUM, 3);
+    ips200_show_string(  0, 16 *  1, "Distance:");
+    ips200_show_float(  72, 16 *  1, Distance, 3, 3);
+    ips200_show_string(  0, 16 *  2, "GPS_Angle:");
+    ips200_show_float(  80, 16 *  2, Angle, 3, 3);
+    ips200_show_string(  0, 16 *  3, "Yaw:");
+    ips200_show_float(  32, 16 *  3, angle[2], 3, 3);
+    ips200_show_string(  0, 16 *  4, "Angle_Error:");
+    ips200_show_float(  96, 16 *  4, Angle_Error, 3, 6);
+    ips200_show_string(  0, 16 *  5, "Delta_Angle:");
+    ips200_show_float(  96, 16 *  5, Delta_Angle, 3, 6);
+    ips200_show_string(  0, 16 *  6, "Delta_Lat:");
+    ips200_show_float(  80, 16 *  6, Delta_Lat, 3, 6);
+    ips200_show_string(  0, 16 *  7, "Delta_Lon:");
+    ips200_show_float(  80, 16 *  7, Delta_Lon, 3, 6);
 
     ips200_show_string(  0, 16 *  9, "KEY1:Task1");
     ips200_show_string(120, 16 *  9, "KEY2:Task2");
@@ -692,11 +706,11 @@ void MotorD_menu(void)
 
 void ZongZuanF(void)
 {
-   if(mt9v03x_finish_flag)
-   {
-        ips200_displayimage03x(mt9v03x_image[0], MT9V03X_W, MT9V03X_H);
-        mt9v03x_finish_flag = 0;
-   }
+//   if(mt9v03x_finish_flag)
+//   {
+//        ips200_displayimage03x(mt9v03x_image[0], MT9V03X_W, MT9V03X_H);
+//        mt9v03x_finish_flag = 0;
+//   }
 }
 
 void Key_Ctrl_Menu()
@@ -808,7 +822,6 @@ void Key_Ctrl_Menu()
                 if(Test_Encoder < PWM_DUTY_MAX)
                 {
                     Test_Encoder += 1000;
-                    PIDIncMotorCtrl(Test_Encoder);
                 }
             }
             if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
@@ -816,7 +829,6 @@ void Key_Ctrl_Menu()
                 if(Test_Encoder > -PWM_DUTY_MAX)
                 {
                     Test_Encoder -= 1000;
-                    PIDIncMotorCtrl(Test_Encoder);
                 }
             }
         }
@@ -837,7 +849,6 @@ void Key_Ctrl_Menu()
                 if(Test_Encoder < PWM_DUTY_MAX)
                 {
                     Test_Encoder += 1000;
-                    PIDIncMotorCtrl(Test_Encoder);
                 }
             }
             if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
@@ -845,7 +856,6 @@ void Key_Ctrl_Menu()
                 if(Test_Encoder > -PWM_DUTY_MAX)
                 {
                     Test_Encoder -= 1000;
-                    PIDIncMotorCtrl(Test_Encoder);
                 }
             }
         }
@@ -866,7 +876,6 @@ void Key_Ctrl_Menu()
                 if(Test_Encoder < PWM_DUTY_MAX)
                 {
                     Test_Encoder += 1000;
-                    PIDIncMotorCtrl(Test_Encoder);
                 }
             }
             if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
@@ -874,7 +883,6 @@ void Key_Ctrl_Menu()
                 if(Test_Encoder > -PWM_DUTY_MAX)
                 {
                     Test_Encoder -= 1000;
-                    PIDIncMotorCtrl(Test_Encoder);
                 }
             }
         }

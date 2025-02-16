@@ -16,18 +16,18 @@ void FLASH_SAV_GPS()
     flash_buffer_clear();
     if(Point_NUM != 0)
     {
-        flash_union_buffer[410].uint32_type = Point_NUM;
+        flash_union_buffer[0].uint32_type = Point_NUM;
         if(flash_check(FLASH_SECTION_INDEX, FLASH_PAGE_INDEX))                      // 判断是否有数据
         {
             flash_erase_page(FLASH_SECTION_INDEX, FLASH_PAGE_INDEX);                // 擦除这一页
         }
         for (int i = 0; i < Point_NUM; i++)
         {
-            flash_union_buffer[i * 4 + 0].uint32_type = lat_union[i].uint32_type[0];  // 纬度高 32 位
-            flash_union_buffer[i * 4 + 1].uint32_type = lat_union[i].uint32_type[1];  // 纬度低 32 位
+            flash_union_buffer[i * 4 + 1].uint32_type = lat_union[i].uint32_type[0];  // 纬度高 32 位
+            flash_union_buffer[i * 4 + 2].uint32_type = lat_union[i].uint32_type[1];  // 纬度低 32 位
 
-            flash_union_buffer[i * 4 + 2].uint32_type = lon_union[i].uint32_type[0];  // 经度高 32 位
-            flash_union_buffer[i * 4 + 3].uint32_type = lon_union[i].uint32_type[1];  // 经度低 32 位
+            flash_union_buffer[i * 4 + 3].uint32_type = lon_union[i].uint32_type[0];  // 经度高 32 位
+            flash_union_buffer[i * 4 + 4].uint32_type = lon_union[i].uint32_type[1];  // 经度低 32 位
         }
         // 写入 Flash 页面
         flash_write_page_from_buffer(FLASH_SECTION_INDEX, FLASH_PAGE_INDEX);
@@ -35,22 +35,6 @@ void FLASH_SAV_GPS()
 
         LED_Buzzer_Flag_Ctrl(LED1);
     }
-    else
-    {
-        LED_Buzzer_Flag_Ctrl(LED2);
-    }
-    if(flash_check(FLASH_SECTION_INDEX, FLASH_PAGE_INDEX - 1))                      // 判断是否有数据
-    {
-        flash_erase_page(FLASH_SECTION_INDEX, FLASH_PAGE_INDEX - 1);                // 擦除这一页
-    }
-    flash_union_buffer[0].float_type = Lat_Fix;
-    flash_union_buffer[1].float_type = Lon_Fix;
-    flash_union_buffer[2].float_type = K_Gps;
-
-
-
-    flash_write_page_from_buffer(FLASH_SECTION_INDEX, FLASH_PAGE_INDEX - 1);
-    flash_buffer_clear();
 }
 
 // 从 Flash 读取数据到数组
@@ -60,24 +44,24 @@ void FLASH_GET_GPS()
     if(flash_check(FLASH_SECTION_INDEX, FLASH_PAGE_INDEX))                      // 判断是否有数据
     {
         flash_read_page_to_buffer(FLASH_SECTION_INDEX, FLASH_PAGE_INDEX);
-        Point_NUM = flash_union_buffer[410].uint32_type;
+        Point_NUM = flash_union_buffer[0].uint32_type;
         for(int i = 0; i < Point_NUM; i++)
         {
-            if(flash_union_buffer[i * 4 + 0].uint32_type != 0)
+            if(flash_union_buffer[i * 4 + 1].uint32_type != 0)
             {
-                if(flash_union_buffer[i * 4 + 1].uint32_type != 0)
+                if(flash_union_buffer[i * 4 + 2].uint32_type != 0)
                 {
-                    lat_union[i].uint32_type[0] = flash_union_buffer[i * 4 + 0].uint32_type;  // 纬度高 32 位
-                    lat_union[i].uint32_type[1] = flash_union_buffer[i * 4 + 1].uint32_type;  // 纬度低 32 位
+                    lat_union[i].uint32_type[0] = flash_union_buffer[i * 4 + 1].uint32_type;  // 纬度高 32 位
+                    lat_union[i].uint32_type[1] = flash_union_buffer[i * 4 + 2].uint32_type;  // 纬度低 32 位
                     GPS_GET_LAT[i] = lat_union[i].double_type;                                // 纬度
                 }
             }
-            if(flash_union_buffer[i * 4 + 2].uint32_type != 0)
+            if(flash_union_buffer[i * 4 + 3].uint32_type != 0)
             {
-                if(flash_union_buffer[i * 4 + 3].uint32_type != 0)
+                if(flash_union_buffer[i * 4 + 4].uint32_type != 0)
                 {
-                    lon_union[i].uint32_type[0] = flash_union_buffer[i * 4 + 2].uint32_type;  // 经度高 32 位
-                    lon_union[i].uint32_type[1] = flash_union_buffer[i * 4 + 3].uint32_type;  // 经度低 32 位
+                    lon_union[i].uint32_type[0] = flash_union_buffer[i * 4 + 3].uint32_type;  // 经度高 32 位
+                    lon_union[i].uint32_type[1] = flash_union_buffer[i * 4 + 4].uint32_type;  // 经度低 32 位
                     GPS_GET_LOT[i] = lon_union[i].double_type;                                // 经度
                 }
             }
@@ -86,22 +70,20 @@ void FLASH_GET_GPS()
         
         LED_Buzzer_Flag_Ctrl(LED1);
     }
-    else
-    {
-        LED_Buzzer_Flag_Ctrl(LED2);
-
-    }
-
-    if(flash_check(FLASH_SECTION_INDEX, FLASH_PAGE_INDEX - 1))                      // 判断是否有数据
-    {
-        flash_read_page_to_buffer(FLASH_SECTION_INDEX, FLASH_PAGE_INDEX - 1);
-        Lat_Fix = flash_union_buffer[0].float_type;
-        Lon_Fix = flash_union_buffer[1].float_type;
-        K_Gps   = flash_union_buffer[2].float_type;
-
-
-        flash_buffer_clear();
-    }
+//    Point_NUM = 6;
+//    GPS_GET_LAT[0] = 22.590801;
+//    GPS_GET_LAT[1] = 22.590741;
+//    GPS_GET_LAT[2] = 22.590671;
+//    GPS_GET_LAT[3] = 22.590666;
+//    GPS_GET_LAT[4] = 22.590737;
+//    GPS_GET_LAT[5] = 22.590791;
+//
+//    GPS_GET_LOT[0] = 113.961823;
+//    GPS_GET_LOT[1] = 113.961822;
+//    GPS_GET_LOT[2] = 113.961823;
+//    GPS_GET_LOT[3] = 113.961864;
+//    GPS_GET_LOT[4] = 113.961859;
+//    GPS_GET_LOT[5] = 113.961853;  
 }
 
 // 修正 Gps 数据
@@ -120,11 +102,11 @@ void FLASH_FIX_GPS()
     }
     for (int i = 0; i < Point_NUM; i++)
     {
-        flash_union_buffer[i * 4 + 0].uint32_type = lat_union[i].uint32_type[0];  // 纬度高 32 位
-        flash_union_buffer[i * 4 + 1].uint32_type = lat_union[i].uint32_type[1];  // 纬度低 32 位
+        flash_union_buffer[i * 4 + 1].uint32_type = lat_union[i].uint32_type[0];  // 纬度高 32 位
+        flash_union_buffer[i * 4 + 2].uint32_type = lat_union[i].uint32_type[1];  // 纬度低 32 位
 
-        flash_union_buffer[i * 4 + 2].uint32_type = lon_union[i].uint32_type[0];  // 经度高 32 位
-        flash_union_buffer[i * 4 + 3].uint32_type = lon_union[i].uint32_type[1];  // 经度低 32 位
+        flash_union_buffer[i * 4 + 3].uint32_type = lon_union[i].uint32_type[0];  // 经度高 32 位
+        flash_union_buffer[i * 4 + 4].uint32_type = lon_union[i].uint32_type[1];  // 经度低 32 位
     }
     // 写入 Flash 页面
     flash_write_page_from_buffer(FLASH_SECTION_INDEX, FLASH_PAGE_INDEX);

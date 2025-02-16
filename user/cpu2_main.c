@@ -46,8 +46,7 @@ void core2_main(void)
     disable_Watchdog();                     // 关闭看门狗
     interrupt_global_enable(0);             // 打开全局中断
     // 此处编写用户代码 例如外设初始化代码等
-
-
+    uart_receiver_init();
 
 
     // 此处编写用户代码 例如外设初始化代码等
@@ -56,7 +55,23 @@ void core2_main(void)
     {
         // 此处编写需要循环执行的代码
         LED_Buzzer_Ctrl();
-
+        if(1 == uart_receiver.finsh_flag)                            // 帧完成标志判断
+        {
+            if(1 == uart_receiver.state)                             // 遥控器失控状态判断
+            {
+                printf("CH1-CH6 data: ");
+                for(int i = 0; i < 6; i++)
+                {
+                    printf("%d ", uart_receiver.channel[i]);         // 串口输出6个通道数据
+                }
+                printf("\r\n");
+            }
+            else
+            {
+                printf("Remote control has been disconnected.\r\n"); // 串口输出失控提示
+            }
+            uart_receiver.finsh_flag = 0;                            // 帧完成标志复位
+        }
 
 
         // 此处编写需要循环执行的代码

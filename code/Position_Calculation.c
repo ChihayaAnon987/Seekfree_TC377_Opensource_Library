@@ -16,18 +16,16 @@ int16  Target_Encoder =   0;       // 转速
 
 void Stright_Some_Distance()
 {
-    double distance = 0;
-
     Start_Lat = gnss.latitude;
     Start_Lon = gnss.longitude;
 
     Delta_Lat = Start_Lat - GPS_GET_LAT[0];
     Delta_Lon = Start_Lon - GPS_GET_LOT[0];
 
-    // Servo_Set(SERVO_MOTOR_MID);
+    double distance = 0;
     Angle_Error = 0;
-    Target_Encoder = 200;
-    while(distance < 10)
+    Target_Encoder = 1500;
+    while(distance < 5)
     {
         distance = get_two_points_distance(Start_Lat, Start_Lon, gnss.latitude, gnss.longitude);
     }
@@ -85,17 +83,17 @@ void Track_Follow()
     // 调试用
     // Angle = Test_Angle;
     
-    if((Angle - Z_360) > 180)
+    if((Angle - angle[2]) > 180)
     {
-        Angle_Error = Angle - Z_360 - 360;
+        Angle_Error = Angle - angle[2] - 360;
     }
-    else if((Angle - Z_360) < -180)
+    else if((Angle - angle[2]) < -180)
     {
-        Angle_Error = Angle - Z_360 + 360;
+        Angle_Error = Angle - angle[2] + 360;
     }
     else
     {
-        Angle_Error = Angle - Z_360;
+        Angle_Error = Angle - angle[2];
     }
     // 改进点
     // 1.Angle是GPS的方向角，通过对GPS的滤波，可以得到更加准确的方向角
@@ -113,20 +111,31 @@ void Track_Follow()
     switch(Track_Points_NUM)
     {
         case 0:
-            Stright_Some_Distance();
+            // Stright_Some_Distance();
             break;
         case 1:
-            Target_Encoder = 200; 
+            Target_Encoder = 1500;
             break;
         case 2:
-            Target_Encoder = 200; 
+            Target_Encoder = 1500;
             break;
         case 3:
-            Target_Encoder = 200; 
+            Target_Encoder = 1500;
             break;
         case 4:
-            Target_Encoder = 200; 
+            Target_Encoder = 1500;
             break;
+        case 5:
+            Target_Encoder = 0;
+            break;
+        case 6:
+            Target_Encoder = 0;
+            break;
+        case 7:
+            Target_Encoder = 0;
+            break;
+
+
 
         case 20:
             break;
@@ -178,6 +187,16 @@ void Point_Switch()
                 Track_Points_NUM = 5;
                 LED_Buzzer_Flag_Ctrl(BUZZER_PIN);
             }
+            break;
+        case 5:
+            if(Distance <2)
+            {
+                Track_Points_NUM = 5;
+                LED_Buzzer_Flag_Ctrl(LED3);
+            }
+            break;
+        
+        default:
             break;
 
         // 科目二设置为GPS循迹，纯惯导虽然稳定，但是速度慢，实现难，暂时不考虑

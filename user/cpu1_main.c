@@ -49,7 +49,6 @@ void core1_main(void)
     // 此处编写用户代码 例如外设初始化代码等
     CPU1_Init();
 
-
     // 此处编写用户代码 例如外设初始化代码等
     cpu_wait_event_ready();                 // 等待所有核心初始化完毕
     while (TRUE)
@@ -60,24 +59,6 @@ void core1_main(void)
         key_scanner();
         Key_Ctrl_Menu();
         ips200_show_rgb565_image(114, 185, (const uint16 *)my_picture, 126, 135, 126, 135, 1);
-//        if(1 == uart_receiver.finsh_flag)                            // 帧完成标志判断
-//        {
-//            if(1 == uart_receiver.state)                             // 遥控器失控状态判断
-//            {
-//                printf("CH1-CH6 data: ");
-//                for(int i = 0; i < 6; i++)
-//                {
-//                    printf("%d ", uart_receiver.channel[i]);         // 串口输出6个通道数据
-//                }
-//                printf("\r\n");
-//            }
-//            else
-//            {
-//                printf("Remote control has been disconnected.\r\n"); // 串口输出失控提示
-//            }
-//            uart_receiver.finsh_flag = 0;                            // 帧完成标志复位
-//        }
-
         // 此处编写需要循环执行的代码
     }
 }

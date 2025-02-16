@@ -337,10 +337,18 @@ void AHRS_getYawPitchRoll(float * angles)
     angles[1] = asin( 2 * q[0] * q[2] - 2 * q[1] * q[3]) * 180 / PI;                                        // ¸©Ñö½Çpitch
     angles[2] = atan2(2 * q[0] * q[3] + 2 * q[1] * q[2], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) * 180 / PI;// Æ«º½½Çyaw
 
-     if(angle[2] < 0)
-     {
-         angle[2] += 360;
-     }
+    // if(kalman_Offset_flag == 1)
+    // {
+    //     angle[2] -= Kalman_Offset.Zdata;
+    // }
+    if(angle[2] < -180)
+    {
+        angle[2] += 360;
+    }
+    if(angle[2] > 180)
+    {
+        angle[2] -= 360;
+    }
 }
 
 void Kalman_Offset_Init()

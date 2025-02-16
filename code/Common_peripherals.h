@@ -72,7 +72,7 @@ void Buzzer_Check(int time);                                   // 蜂鸣器自检函数
 void KEY_Init(void);                                           // 按键初始化
 void System_Time_Count(void);                                  // 系统时间计时
 void LED_Buzzer_Flag_Ctrl(gpio_pin_enum pin);                  // LED、蜂鸣器控制
-void LED_Buzzer_Ctrl();                                        // LED、蜂鸣器控制
+void LED_Buzzer_Ctrl(void);                                        // LED、蜂鸣器控制
 //===================================================函数声明END===================================================
 
 

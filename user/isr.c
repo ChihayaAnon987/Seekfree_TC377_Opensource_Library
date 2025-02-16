@@ -49,14 +49,14 @@ IFX_INTERRUPT(cc60_pit_ch0_isr, CCU6_0_CH0_INT_VECTAB_NUM, CCU6_0_CH0_ISR_PRIORI
 
 
     AHRS_getYawPitchRoll(angle);
-    // if(kalman_Offset_flag == 0)
-    // {
-    //     Kalman_Offset_Init();
-    // }
-     if(gyro_Offset_flag == 1)
-     {
-         IMU_YAW_integral();  //积分出角度值
-     }
+//    if(kalman_Offset_flag == 0)
+//    {
+//        Kalman_Offset_Init();
+//    }
+//     if(gyro_Offset_flag == 1)
+//     {
+//         IMU_YAW_integral();  //积分出角度值
+//     }
 
 
 
@@ -75,12 +75,14 @@ IFX_INTERRUPT(cc60_pit_ch1_isr, CCU6_0_CH1_INT_VECTAB_NUM, CCU6_0_CH1_ISR_PRIORI
     if(Control_Flag == 0)
     {
         PDLocServoCtrl();                              // 舵机 PD位置式控制
-        PIDIncMotorCtrl(Target_Encoder);               // 电机 PID增量式控制
+        // PIDIncMotorCtrl(Test_Encoder);                 // 电机 PID增量式控制
+        // PIDIncMotorCtrl(Target_Encoder);               // 电机 PID增量式控制
+        DRV8701_MOTOR_DRIVER(Target_Encoder);            // 电机驱动
     }
 
     // Get_Gps_Yaw();
-    // Point_Switch();
-    Encoder_Get();                                  // 获取编码器数据
+     Point_Switch();
+    // Encoder_Get();                                  // 获取编码器数据
 
 
 }
