@@ -38,14 +38,13 @@
 
 #define SERVO_MOTOR_PWM             (ATOM1_CH1_P33_9)        // ¶¨ÒåÖ÷°åÉÏ¶æ»ú¶ÔÓ¦Òý½Å
 #define SERVO_MOTOR_FREQ            (300)                    // ¶¨ÒåÖ÷°åÉÏ¶æ»úÆµÂÊ  ÇëÎñ±Ø×¢Òâ·¶Î§ 50-300
-#define SERVO_MOTOR_RMAX            (65)                     // ÓÒ£¬¶¨ÒåÖ÷°åÉÏ¶æ»ú»î¶¯·¶Î§ ½Ç¶È
-#define SERVO_MOTOR_RMIN_DUTY       (SERVO_MOTOR_RMAX(SERVO_MOTOR_RMIN_DUTY))// ÓÒ£¬¶¨ÒåÖ÷°åÉÏ¶æ»ú»î¶¯·¶Î§ Õ¼¿Õ±È(fre=300)
-#define SERVO_MOTOR_MID             (90)                     // ÖÐÖµ
-#define SERVO_MOTOR_MID_DUTY        (4500)                   // ÖÐÖµ Õ¼¿Õ±È(fre=300)
-#define SERVO_MOTOR_LMAX            (115)                    // ×ó£¬¶¨ÒåÖ÷°åÉÏ¶æ»ú»î¶¯·¶Î§ ½Ç¶È
-#define SERVO_MOTOR_LMIN_DUTY       (SERVO_MOTOR_DUTY(SERVO_MOTOR_LMAX))     // ×ó£¬¶¨ÒåÖ÷°åÉÏ¶æ»ú»î¶¯·¶Î§ Õ¼¿Õ±È(fre=300)
+#define SERVO_MOTOR_RMAX            (68)                     // ÓÒ£¬¶¨ÒåÖ÷°åÉÏ¶æ»ú»î¶¯·¶Î§ ½Ç¶È
+#define SERVO_MOTOR_MID             (92)                     // ÖÐÖµ
+#define SERVO_MOTOR_LMAX            (116)                    // ×ó£¬¶¨ÒåÖ÷°åÉÏ¶æ»ú»î¶¯·¶Î§ ½Ç¶È
+#define SERVO_MOTOR_RMIN_DUTY       (SERVO_MOTOR_DUTY(SERVO_MOTOR_RMAX))     // ÓÒ£¬¶¨ÒåÖ÷°åÉÏ¶æ»ú»î¶¯·¶Î§ Õ¼¿Õ±È
+#define SERVO_MOTOR_MID_DUTY        (SERVO_MOTOR_DUTY(SERVO_MOTOR_MID))      // ÖÐÖµ Õ¼¿Õ±È
+#define SERVO_MOTOR_LMIN_DUTY       (SERVO_MOTOR_DUTY(SERVO_MOTOR_LMAX))     // ×ó£¬¶¨ÒåÖ÷°åÉÏ¶æ»ú»î¶¯·¶Î§ Õ¼¿Õ±È
 #define SERVO_MOTOR_DUTY(x)         ((float)PWM_DUTY_MAX/(1000.0/(float)SERVO_MOTOR_FREQ)*(0.5+(float)(x)/90.0))
-
 //===================================================ºê¶¨ÒåEND===================================================
 
 
@@ -60,6 +59,7 @@ extern uint8 LED_Buzzer_Flag;                                  // ±êÖ¾
 //===================================================º¯ÊýÉùÃ÷BEG===================================================
 void CPU0_Init(void);                                          // CPU0 ³õÊ¼»¯
 void CPU1_Init(void);                                          // CPU1 ³õÊ¼»¯
+void ips200_Init(void);                                        // ÆÁÄ»³õÊ¼»¯
 void Oscilloscope_Init(uint8 Channel_Num);                     // ÎÞÏß´®¿Ú³õÊ¼»¯
 void DRV8701_Init(void);                                       // µç»ú³õÊ¼»¯
 void DRV8701_MOTOR_DRIVER(int Motor_PWM);                      // µç»úÇý¶¯
@@ -79,3 +79,4 @@ void LED_Buzzer_Ctrl(void);                                        // LED¡¢·äÃùÆ
 
 
 #endif /* CODE_COMMON_PERIPHERALS_H_ */
+ 

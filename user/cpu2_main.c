@@ -54,24 +54,6 @@ void core2_main(void)
     while (TRUE)
     {
         // 此处编写需要循环执行的代码
-        LED_Buzzer_Ctrl();
-        if(1 == uart_receiver.finsh_flag)                            // 帧完成标志判断
-        {
-            if(1 == uart_receiver.state)                             // 遥控器失控状态判断
-            {
-                printf("CH1-CH6 data: ");
-                for(int i = 0; i < 6; i++)
-                {
-                    printf("%d ", uart_receiver.channel[i]);         // 串口输出6个通道数据
-                }
-                printf("\r\n");
-            }
-            else
-            {
-                printf("Remote control has been disconnected.\r\n"); // 串口输出失控提示
-            }
-            uart_receiver.finsh_flag = 0;                            // 帧完成标志复位
-        }
 
 
         // 此处编写需要循环执行的代码

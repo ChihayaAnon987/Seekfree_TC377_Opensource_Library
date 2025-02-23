@@ -41,6 +41,7 @@ extern Parameter_set Parameter_set0;                            // 参数集合
 extern seekfree_assistant_oscilloscope_struct oscilloscope_data;// 初始化逐飞助手示波器的结构体
 extern double Test_Angle;                                       // 调试用
 extern int16  Test_Encoder;                                     // 调试用
+extern int16  Task_Flag;                                        // 任务标志
 extern uint8  Start_Flag;                                       // 发车标志
 //===================================================全局变量END===================================================
 
@@ -60,6 +61,7 @@ void main_menu7(void);                                         // 主菜单7
 void main_menu8(void);                                         // 主菜单8
 void main_menu9(void);                                         // 主菜单9
 void main_menu10(void);                                        // 主菜单10
+void main_menu11(void);                                        // 主菜单11
 //===================================================一级菜单END===================================================
 
 
@@ -70,13 +72,14 @@ void MotorPID(void);                                           // 菜单：MotorPID
 void GPS_menu(void);                                           // 菜单：GPS
 void spd_menu(void);                                           // 菜单：速度
 void Distance_menu(void);                                      // 菜单：换点距离
-void serve_mid_menu(void);                                     // 菜单：舵机中值测试
+void TaskPoint(void);                                          // 菜单：任务点设置
 void RemoteCtrl_menu(void);                                    // 菜单：遥控
 void Points_menu(void);                                        // 菜单：点
 void ZongZuanF(void);                                          // 菜单：总钻风
 void Imu963_menu(void);                                        // 菜单：IMU963
 void Flash_menu(void);                                         // 菜单：Flash
 void Servo_menu(void);                                         // 菜单：舵机
+void Param_Set(void);                                          // 菜单：参数设置
 void Task_Select(void);                                        // 菜单：任务选择
 //===================================================二级菜单END===================================================
 

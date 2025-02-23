@@ -7,34 +7,14 @@
 
 #include "zf_common_headfile.h"
 
+int Track_Points_NUM   =   0;       // 当前追踪第几个点
+double Angle_Error     =   0;       // 方向角与航向角之差
+float  Fusion_angle    =   0;       // GPS和IMU互补滤波后的角度
+float  Fusion_alpha    = 0.9;       // GPS和IMU互补滤波的权重
+int16  Target_Encoder  =   0;       // 转速
+int16  Fly_Slope_Alpha = 200;       // 飞坡系数
+float  K_Straight      = 1.7;       // 走直线系数
 
-int Track_Points_NUM  =   0;       // 当前追踪第几个点
-double Angle_Error    =   0;       // 方向角与航向角之差
-float  Fusion_angle   =   0;       // GPS和IMU互补滤波后的角度
-float  Fusion_alpha   = 0.9;       // GPS和IMU互补滤波的权重
-int16  Target_Encoder =   0;       // 转速
-
-void Stright_Some_Distance()
-{
-    Start_Lat = gnss.latitude;
-    Start_Lon = gnss.longitude;
-
-    Delta_Lat = Start_Lat - GPS_GET_LAT[0];
-    Delta_Lon = Start_Lon - GPS_GET_LOT[0];
-
-    double distance = 0;
-    Angle_Error = 0;
-    Target_Encoder = 1500;
-    while(distance < 5)
-    {
-        distance = get_two_points_distance(Start_Lat, Start_Lon, gnss.latitude, gnss.longitude);
-    }
-
-    Straight_Lat = gnss.latitude;
-    Straight_Lon = gnss.longitude;
-    Delta_Angle = get_two_points_azimuth(Start_Lat, Start_Lon, Straight_Lat, Straight_Lon);
-    Track_Points_NUM = 1;
-}
 
 /****************************************************************************************************
 //  @brief      将积分的Z_360和逐飞GPS的direction进行互补融合
@@ -55,9 +35,9 @@ void GPS_IMU_Complementary_Filtering()
     }
     Fusion_angle = Fusion_alpha * Z_360 + (1 - Fusion_alpha) * gnss.direction;
     if(Fusion_angle > 180)
-    {
-        Fusion_angle -= 360;
-    }
+     {
+         Fusion_angle -= 360;
+     }
     if(Fusion_angle < -180)
     {
         Fusion_angle += 360;
@@ -76,13 +56,10 @@ void Track_Follow()
     // 计算从第一个点到第二个点的方位角(单位：°)
     // 计算从第一个点到第二个点的距离(单位：m)
     // Distance 作为切换点位的依据
-    // 默认对北发车  IMU规划为+180和-180
-    // 如果点位在正北，那么方向角未经处理的值是0
-    //Angle += 180;  // 原来默认对北发车，把这句话加上，表示对南发车
 
     // 调试用
     // Angle = Test_Angle;
-    
+
     if((Angle - angle[2]) > 180)
     {
         Angle_Error = Angle - angle[2] - 360;
@@ -103,106 +80,42 @@ void Track_Follow()
     // 5.MPC控制和曲率前馈
     // 1234均已实现的差不多，等待实际测试
 
-    // 关于科目一二三的切换，可以借助菜单实现，把Servo_Test换成Task_Select或者新增一个一级菜单都是可以的
-    // KEY1、KEY2、KEY3分别对应科目一、科目二、科目三（预设充足的点位给某个科目，按下按键跳转到某科目对应的点位）
-    // KEY4发车（设置一个标志位，KEY4按下置为高电平，退出在主程序的一个卡死的while循环，进入循迹循环）
-    // 思路大概如此，实现也很简单，但是先算了，把科目一跑完再实现这个逻辑
-
-    switch(Track_Points_NUM)
+    if(Track_Points_NUM == Task1_Start_Point || Track_Points_NUM == Task2_Start_Point || Track_Points_NUM == Task3_Start_Point)
     {
-        case 0:
-            // Stright_Some_Distance();
-            break;
-        case 1:
-            Target_Encoder = 1500;
-            break;
-        case 2:
-            Target_Encoder = 1500;
-            break;
-        case 3:
-            Target_Encoder = 1500;
-            break;
-        case 4:
-            Target_Encoder = 1500;
-            break;
-        case 5:
-            Target_Encoder = 0;
-            break;
-        case 6:
-            Target_Encoder = 0;
-            break;
-        case 7:
-            Target_Encoder = 0;
-            break;
-
-
-
-        case 20:
-            break;
-
-        case 50:
-            break;
-        
-        default:
-            break;
+        Angle_Error = -angle[2];
     }
+    Target_Encoder = GpsTgtEncod[Track_Points_NUM];
 
-
-
+    if(fabs(angle[0]) > 20)
+    {
+        Target_Encoder -= fabs(fabs(angle[0]) - 20) * Fly_Slope_Alpha;
+        if(Target_Encoder <= 1500)
+        {
+            Target_Encoder = 1500;
+        }
+    }
 }
 
 // 切换点位
 void Point_Switch()
 {
-
-    switch(Track_Points_NUM)
+    Distance = get_two_points_distance(gnss.latitude - Delta_Lat, gnss.longitude - Delta_Lon, GPS_GET_LAT[Track_Points_NUM], GPS_GET_LOT[Track_Points_NUM]);
+    if(Track_Points_NUM != Task1_Start_Point && Track_Points_NUM != Task2_Start_Point && Track_Points_NUM != Task3_Start_Point)
     {
-        // 暂时假定科目一采5个点，其中下标0是发车点
-        case 0:
-            break;
-        case 1:
-            if(Distance < 2)
-            {
-                Track_Points_NUM = 2;
-                LED_Buzzer_Flag_Ctrl(BUZZER_PIN);
-            }
-            break;
-        case 2:
-            if(Distance < 2)
-            {
-                Track_Points_NUM = 3;
-                LED_Buzzer_Flag_Ctrl(BUZZER_PIN);
-            }
-            break;
-        case 3:
-            if(Distance < 2)
-            {
-                Track_Points_NUM = 4;
-                LED_Buzzer_Flag_Ctrl(BUZZER_PIN);
-            }
-            break;
-        case 4:
-            if(Distance < 2)
-            {
-                Track_Points_NUM = 5;
-                LED_Buzzer_Flag_Ctrl(BUZZER_PIN);
-            }
-            break;
-        case 5:
-            if(Distance <2)
-            {
-                Track_Points_NUM = 5;
-                LED_Buzzer_Flag_Ctrl(LED3);
-            }
-            break;
-        
-        default:
-            break;
-
-        // 科目二设置为GPS循迹，纯惯导虽然稳定，但是速度慢，实现难，暂时不考虑
-
-        // 科目三桥洞标准方案是通过GPS导航到桥洞附近，再通过摄像头识别桥洞中间白色PCV材料。
-        // 
+        if(Distance < GpsDistance[Track_Points_NUM])
+        {
+            Track_Points_NUM ++;
+            LED_Buzzer_Flag_Ctrl(BUZZER_PIN);
+        }
+    }
+    else
+    {
+        if (Distance > GpsDistance[Track_Points_NUM])
+        {
+            Track_Points_NUM ++;
+            LED_Buzzer_Flag_Ctrl(BUZZER_PIN);
+            Delta_Angle = get_two_points_azimuth(Start_Lat, Start_Lon, gnss.latitude, gnss.longitude);
+        }
     }
 
 }

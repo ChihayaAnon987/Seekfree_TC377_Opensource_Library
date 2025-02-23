@@ -10,6 +10,9 @@
 
 //===================================================宏定义BEG===================================================
 #define NUM_GPS_DATA        (     100     )                  // GPS 采集点数
+#define Task1_Start_Point   (      0      )                  // 科目一起始点位
+#define Task2_Start_Point   (     10      )                  // 科目二起始点位
+#define Task3_Start_Point   (     50      )                  // 科目三起始点位
 #define QS                  (   8.99266   )                  // 坐标变换常数
 //===================================================宏定义END===================================================
 
@@ -19,8 +22,6 @@ extern uint32 Point_NUM;                                       // 当前采集的 GPS
 extern float  K_Gps;                                           // 衔接部分的权重
 extern double FilterPoint_Lat;                                 // 滤波后的纬度
 extern double FilterPoint_Lon;                                 // 滤波的经度
-// extern double Now_Lat;                                         // 自身相对原点的纬度
-// extern double Now_Lon;                                         // 自身相对原点的经度
 extern double Start_Lat;                                       // 发车的经度
 extern double Start_Lon;                                       // 发车的纬度
 extern double Straight_Lat;                                    // 直行10-20m的经度
@@ -39,11 +40,15 @@ extern double Delta_x;                                         // 位移
 extern double Delta_y;                                         // 位移
 extern double GPS_GET_LAT[NUM_GPS_DATA];                       // 存储纬度数据的数组
 extern double GPS_GET_LOT[NUM_GPS_DATA];                       // 存储经度数据的数组
+extern int8   Task1_Points;                                    // 科目一所用点位数量
+extern int8   Task2_Points;                                    // 科目二所用点位数量
+extern int8   Task3_Points;                                    // 科目三所用点位数量
+extern float  GpsDistance[NUM_GPS_DATA];                       // 存储换点距离的数组
+extern int16  GpsTgtEncod[NUM_GPS_DATA];                       // 存储点位速度的数组
 //===================================================全局变量END===================================================
 
 
 //===================================================函数声明BEG===================================================
-void GL_CRC(void);                                             // 按键采点函数
 void Get_Gps(void);                                            // 获取坐标等信息
 void Get_Gps_Yaw(void);                                        // 获取GPS偏航角
 //===================================================函数声明END===================================================

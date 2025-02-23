@@ -6,7 +6,6 @@
  */
 
 #include "zf_common_headfile.h"
-
 double_to_uint32_union lat_union[NUM_GPS_DATA];
 double_to_uint32_union lon_union[NUM_GPS_DATA];
 
@@ -67,23 +66,13 @@ void FLASH_GET_GPS()
             }
         }
         flash_buffer_clear();                                                    // 清空缓冲区
-        
+
         LED_Buzzer_Flag_Ctrl(LED1);
     }
-//    Point_NUM = 6;
-//    GPS_GET_LAT[0] = 22.590801;
-//    GPS_GET_LAT[1] = 22.590741;
-//    GPS_GET_LAT[2] = 22.590671;
-//    GPS_GET_LAT[3] = 22.590666;
-//    GPS_GET_LAT[4] = 22.590737;
-//    GPS_GET_LAT[5] = 22.590791;
-//
-//    GPS_GET_LOT[0] = 113.961823;
-//    GPS_GET_LOT[1] = 113.961822;
-//    GPS_GET_LOT[2] = 113.961823;
-//    GPS_GET_LOT[3] = 113.961864;
-//    GPS_GET_LOT[4] = 113.961859;
-//    GPS_GET_LOT[5] = 113.961853;  
+    else
+    {
+        LED_Buzzer_Flag_Ctrl(LED2);
+    }
 }
 
 // 修正 Gps 数据
@@ -146,7 +135,7 @@ void FLASH_SAV_PAR()
     flash_union_buffer[0].float_type = Parameter_set0.ServePID[0];
     flash_union_buffer[1].float_type = Parameter_set0.ServePID[1];
     flash_union_buffer[2].float_type = Parameter_set0.ServePID[2];
-    
+
     //电机PID
     flash_union_buffer[3].float_type = Parameter_set0.SpeedPID[0];
     flash_union_buffer[4].float_type = Parameter_set0.SpeedPID[1];
@@ -154,7 +143,41 @@ void FLASH_SAV_PAR()
     // 调试速度和换点距离
     flash_union_buffer[6].int32_type = Parameter_set0.Speed_Duty;
     flash_union_buffer[7].float_type = Parameter_set0.Distance;
+    // 任务点
+    flash_union_buffer[8].int8_type  = Task1_Points;
+    flash_union_buffer[9].int8_type  = Task2_Points;
+    flash_union_buffer[10].int8_type = Task3_Points;
 
+    // 系数
+    flash_union_buffer[11].int16_type = Fly_Slope_Alpha;
+    flash_union_buffer[12].float_type = K_Straight;
+
+    flash_union_buffer[13].float_type = From_0000_To_2000_ServoPD.Kp;
+    flash_union_buffer[14].float_type = From_0000_To_2000_ServoPD.Kd;
+    flash_union_buffer[15].float_type = From_2000_To_4000_ServoPD.Kp;
+    flash_union_buffer[16].float_type = From_2000_To_4000_ServoPD.Kd;
+    flash_union_buffer[17].float_type = From_4000_To_5000_ServoPD.Kp;
+    flash_union_buffer[18].float_type = From_4000_To_5000_ServoPD.Kd;
+    flash_union_buffer[19].float_type = From_5000_To_6000_ServoPD.Kp;
+    flash_union_buffer[20].float_type = From_5000_To_6000_ServoPD.Kd;
+    flash_union_buffer[21].float_type = From_6000_To_7000_ServoPD.Kp;
+    flash_union_buffer[22].float_type = From_6000_To_7000_ServoPD.Kd;
+    flash_union_buffer[23].float_type = From_7000_To_8000_ServoPD.Kp;
+    flash_union_buffer[24].float_type = From_7000_To_8000_ServoPD.Kd;
+    flash_union_buffer[25].float_type = From_8000_To_9000_ServoPD.Kp;
+    flash_union_buffer[26].float_type = From_8000_To_9000_ServoPD.Kd;
+    flash_union_buffer[27].float_type = From_9000_To_9900_ServoPD.Kp;
+    flash_union_buffer[28].float_type = From_9000_To_9900_ServoPD.Kd;
+    
+    // 换点距离和速度数组
+    for(int i = 100; i < 100 + NUM_GPS_DATA; i++)
+    {
+        flash_union_buffer[i].float_type = GpsDistance[i - 100];
+    }
+    for(int i = 100 + NUM_GPS_DATA; i < 100 + 2 * NUM_GPS_DATA; i++)
+    {
+        flash_union_buffer[i].int16_type = GpsTgtEncod[i - 100 - NUM_GPS_DATA];
+    }
     // 指示灯亮，表明已读取
     LED_Buzzer_Flag_Ctrl(LED1);
 
@@ -182,7 +205,44 @@ void FLASH_GET_PAR()
         // 调试速度和换点距离
         Parameter_set0.Speed_Duty = flash_union_buffer[6].int32_type;
         Parameter_set0.Distance   = flash_union_buffer[7].float_type;
+        // 任务点
+        Task1_Points = flash_union_buffer[8].int8_type ;
+        Task2_Points = flash_union_buffer[9].int8_type ;
+        Task3_Points = flash_union_buffer[10].int8_type;
+
+        // 系数
+        Fly_Slope_Alpha = flash_union_buffer[11].int16_type;
+        K_Straight      = flash_union_buffer[12].float_type;
+
+        From_0000_To_2000_ServoPD.Kp = flash_union_buffer[13].float_type;
+        From_0000_To_2000_ServoPD.Kd = flash_union_buffer[14].float_type;
+        From_2000_To_4000_ServoPD.Kp = flash_union_buffer[15].float_type;
+        From_2000_To_4000_ServoPD.Kd = flash_union_buffer[16].float_type;
+        From_4000_To_5000_ServoPD.Kp = flash_union_buffer[17].float_type;
+        From_4000_To_5000_ServoPD.Kd = flash_union_buffer[18].float_type;
+        From_5000_To_6000_ServoPD.Kp = flash_union_buffer[19].float_type;
+        From_5000_To_6000_ServoPD.Kd = flash_union_buffer[20].float_type;
+        From_6000_To_7000_ServoPD.Kp = flash_union_buffer[21].float_type;
+        From_6000_To_7000_ServoPD.Kd = flash_union_buffer[22].float_type;
+        From_7000_To_8000_ServoPD.Kp = flash_union_buffer[23].float_type;
+        From_7000_To_8000_ServoPD.Kd = flash_union_buffer[24].float_type;
+        From_8000_To_9000_ServoPD.Kp = flash_union_buffer[25].float_type;
+        From_8000_To_9000_ServoPD.Kd = flash_union_buffer[26].float_type;
+        From_9000_To_9900_ServoPD.Kp = flash_union_buffer[27].float_type;
+        From_9000_To_9900_ServoPD.Kd = flash_union_buffer[28].float_type;
+
+        // 换点距离和速度数组
+        for(int i = 100; i < 100 + NUM_GPS_DATA; i++)
+        {
+            GpsDistance[i - 100] = flash_union_buffer[i].float_type;
+        }
+        for(int i = 100 + NUM_GPS_DATA; i < 100 + 2 * NUM_GPS_DATA; i++)
+        {
+            GpsTgtEncod[i - 100 - NUM_GPS_DATA] = flash_union_buffer[i].int16_type;
+        }
+
         flash_buffer_clear();                                                    // 清空缓冲区
     }
 
 }
+ 

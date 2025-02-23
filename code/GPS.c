@@ -6,7 +6,6 @@
  */
 
 #include "zf_common_headfile.h"
-
 //1.确定坐标点
 //2.利用坐标点代入角度计算函数----方向角
 //3.IMU---------------------------航向角
@@ -45,10 +44,10 @@
 /*
     Lat 0.000001 = 0.111319m
     Lon 0.000001 = 0.061010m
-    Lat+0.000001 是 0°
-    Lat-0.000001 是 180°
-    Lon+0.000001 是 270°
-    Lon-0.000001 是 90°
+    Lat+0.000001 是 0°  (北)
+    Lat-0.000001 是 180°(南)
+    Lon+0.000001 是 90° (东)
+    Lon-0.000001 是 270°(西)
 */
 
 
@@ -56,8 +55,6 @@ uint32 Point_NUM = 0;               // 已采集点数
 float K_Gps      = 0.5;             // 衔接部分的权重
 double FilterPoint_Lat = 0;         // 滤波后的纬度
 double FilterPoint_Lon = 0;         // 滤波后的经度
-// double Now_Lat      = 0;            // 自身相对原点的经度
-// double Now_Lon      = 0;            // 自身相对原点的纬度
 double Start_Lat;                   // 发车的经度
 double Start_Lon;                   // 发车的纬度
 double Straight_Lat;                // 直行10-20m的经度
@@ -73,66 +70,44 @@ float  Yaw          = 0;            // 偏航角
 uint8  Yaw_Times    = 0;            // 偏航角计数
 float  Lat_Fix    = 1.0;            // 纬度修正系数
 float  Lon_Fix    = 1.0;            // 经度修正系数
-double Delta_x    = 0;              // 位移
-double Delta_y    = 0;              // 位移
+double Delta_x      = 0;            // 位移
+double Delta_y      = 0;            // 位移
 double Distance     = 0;            // 自身距下一个点的距离
 double GPS_GET_LAT[NUM_GPS_DATA];   // 纬度
 double GPS_GET_LOT[NUM_GPS_DATA];   // 经度
-
-
-
-// 按键采点函数
-void GL_CRC()
+int8   Task1_Points = 5;            // 科目一所用点位数量
+int8   Task2_Points = 10;           // 科目二所用点位数量（4个桶, 每多一个桶增加两个点位）
+int8   Task3_Points = 9;           // 科目三所用点位数量
+float  GpsDistance[NUM_GPS_DATA] = 
 {
-    // KEY1或者通道3按下都可以记录点位
-    if(key_get_state(KEY_1) == KEY_SHORT_PRESS || Channal_3_Press_Flag)
-    {
-        if(gnss.state == 1)
-        {
-            lat_union[Point_NUM].double_type = gnss.latitude; // 偶数储存纬度latitude
-            lon_union[Point_NUM].double_type = gnss.longitude;// 奇数储存经度longitude
-            Point_NUM++;
-        }
-        Point_NUM = 6;
-        lat_union[0].double_type = 22.590801;
-        lat_union[1].double_type = 22.590741;
-        lat_union[2].double_type = 22.590671;
-        lat_union[3].double_type = 22.590666;
-        lat_union[4].double_type = 22.590737;
-        lat_union[5].double_type = 22.590791;
+    5.0, 3.0, 2.5, 4.0,   0,   0,   0,   0, 1.5,   0,  // 0 - 9
 
-        lon_union[0].double_type = 113.961823;
-        lon_union[1].double_type = 113.961822;
-        lon_union[2].double_type = 113.961823;
-        lon_union[3].double_type = 113.961864;
-        lon_union[4].double_type = 113.961859;
-        lon_union[5].double_type = 113.961853;
-    }
+    5.0, 1.5, 1.5, 1.5, 1.5, 1.0, 1.5, 1.5, 1.5, 4.0,  // 10 - 19
+    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  // 20 - 29
+    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  // 30 - 39
+    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  // 40 - 49
 
-    if(key_get_state(KEY_2) == KEY_SHORT_PRESS)
-    {
-        FLASH_SAV_GPS();
-    }
+    4.0, 1.0, 1.0, 1.0, 1.5, 1.5, 1.5, 1.5, 4.5, 0.0,  // 50 - 59
+    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  // 60 - 69
+    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  // 70 - 79
+    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  // 80 - 89
+    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0   // 90 - 99
+};  // 存储换点距离的数组
+int16  GpsTgtEncod[NUM_GPS_DATA] = 
+{
+    6000, 7000, 3000, 4000, 7000,    0,    0,    0, 3000,    0,  // 0 - 9
 
-    if(key_get_state(KEY_3) == KEY_SHORT_PRESS)           // KEY2和KEY3配合以实现对某个目标点的重采集
-    {
+    3500, 1700, 1700, 1700, 1700, 1700, 1700, 1700, 2000, 5500,  // 10 - 19
+       0,    0,    0,    0,    0,    0,    0,    0,    0,    0,  // 20 - 29
+       0,    0,    0,    0,    0,    0,    0,    0,    0,    0,  // 30 - 39
+       0,    0,    0,    0,    0,    0,    0,    0,    0,    0,  // 40 - 49
 
-        if(Point_NUM >= 0)
-        {
-            Point_NUM += 1;
-        }
-    }
-
-    if(key_get_state(KEY_4) == KEY_SHORT_PRESS)
-    {
-        if(Point_NUM > 0)
-        {
-            Point_NUM -= 1;
-        }
-    }
-
-
-}
+    3000, 2000, 2000, 3000, 3000, 3000, 2000, 2000, 5000,    0,  // 50 - 59
+       0,    0,    0,    0,    0,    0,    0,    0,    0,    0,  // 60 - 69
+       0,    0,    0,    0,    0,    0,    0,    0,    0,    0,  // 70 - 79
+       0,    0,    0,    0,    0,    0,    0,    0,    0,    0,  // 80 - 89
+       0,    0,    0,    0,    0,    0,    0,    0,    0,    0   // 90 - 99
+};  // 存储点位速度的数组
 
 
 void Get_Gps()
@@ -145,8 +120,8 @@ void Get_Gps()
         gnss_data_parse();           //开始解析数据
         FilterPoint_Lat = K_Gps * FilterPoint_Lat + (1 - K_Gps) * gnss.latitude;
         FilterPoint_Lon = K_Gps * FilterPoint_Lon + (1 - K_Gps) * gnss.longitude;
-        Angle = get_two_points_azimuth(gnss.latitude, gnss.longitude, GPS_GET_LAT[Track_Points_NUM] - Delta_Lat, GPS_GET_LOT[Track_Points_NUM] - Delta_Lon);
-        // Angle -= Delta_Angle;
+        Angle = get_two_points_azimuth(gnss.latitude - Delta_Lat, gnss.longitude - Delta_Lon, GPS_GET_LAT[Track_Points_NUM], GPS_GET_LOT[Track_Points_NUM]);
+        Angle -= Delta_Angle;
         if(Angle > 180)
         {
             Angle -= 360;
@@ -155,8 +130,7 @@ void Get_Gps()
         {
             Angle += 360;
         }
-        Distance = get_two_points_distance(gnss.latitude, gnss.longitude, GPS_GET_LAT[Track_Points_NUM] - Delta_Lat, GPS_GET_LOT[Track_Points_NUM] - Delta_Lon);
-
+        Distance = get_two_points_distance(gnss.latitude - Delta_Lat, gnss.longitude - Delta_Lon, GPS_GET_LAT[Track_Points_NUM], GPS_GET_LOT[Track_Points_NUM]);
         // if(gnss.direction < 180)
         // {
         //     Gps_Yaw = gnss.direction;
@@ -181,7 +155,7 @@ void Get_Gps_Yaw()
     }
     if(Yaw_Times == 10)
     {
-        Gps_Yaw = Gps_Yaw2 / 10;
+        Yaw = Gps_Yaw2 / 10;
         Gps_Yaw2 = 0;
         Yaw_Times = 0;
     }

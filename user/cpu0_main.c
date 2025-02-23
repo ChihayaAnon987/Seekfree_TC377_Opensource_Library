@@ -53,9 +53,11 @@ int core0_main(void)
     clock_init();                   // 获取时钟频率<务必保留>
     debug_init();                   // 初始化默认调试串口
     // 此处编写用 户代码 例如外设初始化代码等
+
     CPU0_Init();                     // 所有初始化
     FLASH_GET_GPS();                 // 从 Flash 读取 GPS 数据
     FLASH_GET_PAR();                 // 从 Flash 读取参数
+
 
     // 此处编写用户代码 例如外设初始化代码等
     cpu_wait_event_ready();         // 等待所有核心初始化完毕
@@ -65,12 +67,35 @@ int core0_main(void)
         {
             break;
         }
+        else
+        {
+            Start_Lat = gnss.latitude;
+            Start_Lon = gnss.longitude;
+            if(Task_Flag == 1)
+            {
+                Delta_Lat = gnss.latitude - GPS_GET_LAT[Task1_Start_Point];
+                Delta_Lon = gnss.longitude - GPS_GET_LOT[Task1_Start_Point];
+            }
+            if(Task_Flag == 2)
+            {
+                Delta_Lat = gnss.latitude - GPS_GET_LAT[Task2_Start_Point];
+                Delta_Lon = gnss.longitude - GPS_GET_LOT[Task2_Start_Point];
+            }
+            if(Task_Flag == 3)
+            {
+                Delta_Lat = gnss.latitude - GPS_GET_LAT[Task3_Start_Point];
+                Delta_Lon = gnss.longitude - GPS_GET_LOT[Task3_Start_Point];
+            }
+        }
     }
-    
+
     while (TRUE)
     {
         // 此处编写需要循环执行的代码
-        Track_Follow();
+        if(Control_Flag == 0)
+        {
+            Track_Follow();
+        }
         // 此处编写需要循环执行的代码
     }
 }

@@ -17,28 +17,37 @@ void CPU0_Init()
     gnss_init(TAU1201);                                             // GPS初始化
     SERVO_Init();                                                   // 舵机初始化
     DRV8701_Init();                                                 // 电机初始化
+    encoder_dir_init(ENCODER1_TIM, ENCODER1_PLUS, ENCODER1_DIR);    // 编码器初始化
+    uart_receiver_init();                                           // sbus接收机初始化
+//    wireless_uart_init();                                           // 初始化无线串口
+    Oscilloscope_Init(8);                                           // 逐飞示波器初始化
     pit_ms_init(CCU60_CH0, 5);                                      // 中断，IMU数据采集
     pit_ms_init(CCU60_CH1, 5);                                      // 中断 编码器、舵机电机PID
     pit_ms_init(CCU61_CH0, 100);                                    // 中断 GPS数据解析
-    encoder_dir_init(ENCODER1_TIM, ENCODER1_PLUS, ENCODER1_DIR);    // 编码器初始化
-//    uart_receiver_init();                                           // sbus接收机初始化
-//    wireless_uart_init();                                           // 初始化无线串口
-    Oscilloscope_Init(8);                                           // 逐飞示波器初始化
+    pit_ms_init(CCU61_CH1, 5);                                      // 中断 遥控器
 }
 
 void CPU1_Init()
 {
     Buzzer_Init();                                                  // 蜂鸣器初始化
     KEY_Init();                                                     // 按键初始化
-//    mt9v03x_init();                                                 // 总钻风初始化
+    mt9v03x_init();                                                 // 总钻风初始化
     key_init(10);                                                   // 按键初始化
-    ips200_init(IPS200_TYPE);                                       // 屏幕初始化
+    ips200_Init();                                                  // 屏幕初始化
     Buzzer_Check(200);                                              // 自检，表示初始化成功
 }
 
+void ips200_Init()
+{
+    ips200_init(IPS200_TYPE);
+    ips200_set_color(RGB565_WHITE, RGB565_BLACK);                   // 护眼模式
+    ips200_full(RGB565_BLACK);
+}
 void Oscilloscope_Init(uint8 Channel_Num)
 {
     seekfree_assistant_interface_init(SEEKFREE_ASSISTANT_WIRELESS_UART); // 逐飞助手初始化
+    seekfree_assistant_camera_information_config(SEEKFREE_ASSISTANT_MT9V03X, image_copy[0], MT9V03X_W, MT9V03X_H);
+    seekfree_assistant_camera_boundary_config(XY_BOUNDARY, BOUNDARY_NUM, LeftLine_x, RightLine_x, CenterLine_x, LeftLine_y, RightLine_y, CenterLine_y);
     for(int i = 0; i < Channel_Num; i++)
     {
         oscilloscope_data.data[i] = 0;
@@ -55,16 +64,16 @@ void DRV8701_Init(void)
 }
 
 void DRV8701_MOTOR_DRIVER(int Motor_PWM)
-{   
+{
     Motor_PWM = IntClip(Motor_PWM, -PWM_DUTY_MAX, PWM_DUTY_MAX); // 限幅
     if(Motor_PWM >= 0)                      // 电机正转
     {
-        gpio_set_level(DIR_CH1, 1);
+        gpio_set_level(DIR_CH1, 0);
         pwm_set_duty  (PWM_CH1, Motor_PWM);
     }
     else                                // 电机反转
     {
-        gpio_set_level(DIR_CH1, 0);
+        gpio_set_level(DIR_CH1, 1);
         pwm_set_duty  (PWM_CH1, -Motor_PWM);
     }
 }
